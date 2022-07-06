@@ -1,0 +1,21 @@
+.signals {
+  width: 50%;
+  margin: 0 auto;
+  padding: 1rem 0;
+  &__back {
+    display: flex;
+    width: fit-content;
+    span {
+      align-self: center;
+    }
+    p {
+      margin: 0;
+    }
+    &:hover {
+      background-color: lightgray;
+    }
+  }
+  &__form {
+    width: 50%;
+  }
+}

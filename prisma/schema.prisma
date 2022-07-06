@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./add-on_vim.db"
+}
+
+model projects {
+  project_id Int @id @default(autoincrement())
+  project_name String
+  machines machines[]
+}
+
+model machines {
+  machine_id Int @id @default(autoincrement())
+  machine_name String
+  project_id Int
+  project projects @relation(fields: [project_id],references: [project_id],onDelete: Cascade,onUpdate: Cascade)
+  machins_signals machines_signals[]
+}
+
+model signal_categories {
+  signal_category_id Int @id @default(autoincrement())
+  category String
+  signals signals[]
+}
+
+model signals {
+  signal_id Int @id @default(autoincrement())
+  signal_name String
+  signal_category_id Int
+  signal_category signal_categories @relation(fields: [signal_category_id],references: [signal_category_id],onDelete: Cascade,onUpdate: Cascade)
+  machines_signals machines_signals[]
+}
+
+model machines_signals {
+  machine_signal_id Int @id @default(autoincrement())
+  machine_id Int
+  signal_id Int
+  machine machines @relation(fields: [machine_id],references: [machine_id],onDelete: Cascade,onUpdate: Cascade)
+  signal signals @relation(fields: [signal_id],references: [signal_id],onDelete: Cascade,onUpdate: Cascade)
+}

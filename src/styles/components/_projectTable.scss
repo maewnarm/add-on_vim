@@ -1,0 +1,17 @@
+.project-table {
+  .editable-cell-value-wrap {
+    padding: 0.2rem;
+  }
+  &__create {
+    p {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    margin-top: 1rem;
+    &__button {
+      display: flex;
+      justify-content: right;
+      margin-right: 1rem;
+    }
+  }
+}

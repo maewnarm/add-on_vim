@@ -1,0 +1,9 @@
+.operation-cell {
+  display: flex;
+  a {
+    padding: 0 0.2rem;
+    &:not(:last-child) {
+      border-right: 1px solid gray;
+    }
+  }
+}

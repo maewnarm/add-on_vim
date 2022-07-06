@@ -1,0 +1,28 @@
+// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import type { NextApiRequest, NextApiResponse } from "next";
+import { prisma } from "./loadProjects";
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Method not allowed" });
+  }
+
+  const signalData = JSON.parse(req.body);
+
+  const createdSignal = await prisma.signals
+    .create({
+      data: signalData,
+    })
+    .catch((e) =>
+      res.status(400).json({
+        message: "query createSignal error",
+        error: e,
+      })
+    )
+    .finally(async () => await prisma.$disconnect());
+
+  res.status(200).json(createdSignal);
+}
