@@ -1,0 +1,95 @@
+.standardized {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  &__header {
+    // position: sticky;
+    top: 0;
+    display: flex;
+    gap: 1rem;
+    font-weight: 500;
+    margin: 0 0.2rem;
+    padding: 0 0.75rem;
+    width: fit-content;
+    background-color: var(--color-3);
+    & p {
+      margin: 0;
+    }
+  }
+  &__table {
+    overflow: auto;
+    height:60%;
+  }
+  &__timechart {
+    flex: 1;
+    height: 40%;
+  }
+}
+
+.std-table {
+  height: 100%;
+  margin: 0;
+  overflow-y: auto;
+  &__wrapper {
+    &__table {
+      margin-right: 0.5rem;
+      table {
+        font-size: 1rem;
+        thead {
+          tr,
+          th {
+            border: 1px solid black;
+          }
+          tr:first-child th:first-child {
+            width: 20px;
+            border: 1px solid transparent;
+            border-right: inherit;
+          }
+        }
+        tbody {
+          tr.highlighted {
+            td:not(:first-child) {
+              background-color: yellow;
+            }
+            td:first-child {
+              visibility: visible;
+              span {
+                font-size: 16px;
+                color: yellow;
+              }
+            }
+          }
+          td:not(td:nth-child(3)) {
+            text-align: center;
+          }
+          td {
+            max-width: 100px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            border: 1px solid black;
+            &:first-child {
+              border: 1px solid transparent;
+              border-right: 1px solid black;
+              visibility: hidden;
+            }
+          }
+        }
+      }
+      .step-row {
+        cursor: default;
+      }
+    }
+  }
+}
+
+.std-timechart {
+  height: 100%;
+  &__wrapper {
+    height: 100%;
+    &__chart {
+      height: 100%;
+    }
+  }
+}

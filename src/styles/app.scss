@@ -3,6 +3,7 @@
 // Abstracts
 @import "abstracts/variables";
 @import "abstracts/antd";
+@import "abstracts/scrollbar";
 
 // Base
 @import "base/common";
@@ -11,9 +12,12 @@
 @import "components/operation";
 @import "components/projectTable";
 @import "components/signalTable";
+@import "components/motion/std";
 
 // Layout
 @import "layout/main";
 
 // Pages
-@import "pages/signals";
+@import "pages/home";
+@import "pages/signal";
+@import "pages/motion";

@@ -3,7 +3,7 @@ const path = require('path')
 const withTM = require('next-transpile-modules')(['three'])
 
 const nextConfig = {
-  reactStrictMode: true,
+  // reactStrictMode: true,
   sassOptions: {
     includePaths: [path.join(__dirname,'styles')]
   }

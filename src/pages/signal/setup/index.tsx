@@ -233,8 +233,8 @@ const Signals = () => {
   }, []);
 
   return (
-    <div className="signals">
-      <div className="signals__back" onClick={() => router.back()}>
+    <div className="signal-setup">
+      <div className="signal__back" onClick={() => router.back()}>
         <ArrowLeftOutlined />
         <p>Back</p>
       </div>
@@ -246,7 +246,7 @@ const Signals = () => {
         bordered
         loading={isCategoryLoading}
       />
-      <div className="signals__form form-category">
+      <div className="signal__form form-category">
         <Form form={form_cats} onFinish={onCategoryFinish}>
           <Form.Item name="category" label="Category name">
             <Input allowClear />
@@ -265,7 +265,7 @@ const Signals = () => {
         bordered
         loading={isSignalLoading}
       />
-      <div className="signals__form form-signals">
+      <div className="signal__form form-signal">
         <Form form={form_signals} onFinish={onSignalFinish}>
           <Form.Item name="categoryId" label="Category">
             <Select placeholder="Select category" allowClear>
