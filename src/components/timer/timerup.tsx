@@ -5,6 +5,7 @@ interface TimerProps {
   start: boolean;
   pause?: boolean;
   stop: boolean;
+  loop?: boolean;
   targetSecond?: number;
   targetStepSecond?: number[];
   stopFunction?: () => void;
@@ -19,6 +20,7 @@ const TimerUp: React.FC<TimerProps> = (props) => {
     start,
     pause,
     stop,
+    loop,
     targetSecond,
     targetStepSecond,
     outputFunction,
@@ -105,10 +107,7 @@ const TimerUp: React.FC<TimerProps> = (props) => {
 
     if (targetStepSecond) {
       const target = targetStepSecond[step - 1] * 10;
-      // console.log("target:", target);
-      // console.log("stepcount:", stepCount);
       if (stepCount === target) {
-        console.log("step up");
         setStepCount(1);
         setStep(step + 1);
       } else {
@@ -118,16 +117,20 @@ const TimerUp: React.FC<TimerProps> = (props) => {
 
     if (targetSecond) {
       if (!stopFunction) return;
-      console.log("targetSecond:", targetSecond);
-      console.log("count", count);
+
       if (count === targetSecond * 10) {
-        stopFunction();
+        if (loop) {
+          setCount(0);
+          setStepCount(0);
+          setStep(1);
+        } else {
+          stopFunction();
+        }
       }
     }
   }, [count]);
 
   useEffect(() => {
-    console.log("step:", step);
     if (!setStepFunction) return;
 
     setStepFunction(step);

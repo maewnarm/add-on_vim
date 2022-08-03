@@ -1,11 +1,11 @@
 import TimerUp from "@/components/timer/timerup";
-import { Button } from "antd";
+import { Button, Switch } from "antd";
 import React, { useEffect, useState } from "react";
 import StdTable from "./table";
 import StdTimechart from "./timechart";
 
 interface StandardizedProps {
-  id: number
+  id: number;
 }
 
 export type TableDataType = {
@@ -58,9 +58,10 @@ const tableData: TableDataType[] = [
   },
 ];
 
-const Standardized:React.FC<StandardizedProps> = ({id}) => {
+const Standardized: React.FC<StandardizedProps> = ({ id }) => {
   const [timerState, setTimerState] = useState([false, false, false]);
   const [highlightRow, setHighlightRow] = useState(0);
+  const [isLoop, setIsLoop] = useState(false);
 
   const setHighlightPosition = (targetId: string) => {
     // const targetRow = document.getElementById(targetId);
@@ -74,6 +75,10 @@ const Standardized:React.FC<StandardizedProps> = ({id}) => {
         row.classList.add("highlighted");
       }
     });
+  };
+
+  const triggerLoop = () => {
+    setIsLoop(!isLoop);
   };
 
   const startTimerCountup = () => {
@@ -110,11 +115,18 @@ const Standardized:React.FC<StandardizedProps> = ({id}) => {
           start={timerState[0]}
           pause={timerState[1]}
           stop={timerState[2]}
+          loop={isLoop}
           targetSecond={13.8}
           targetStepSecond={tableData.map((step) => step.HT)}
           stopFunction={stopTimerCountup}
           setStepFunction={setHighlightStep}
           showTimer={true}
+        />
+        <Switch
+          checkedChildren="loop on"
+          unCheckedChildren="loop off"
+          checked={isLoop}
+          onChange={triggerLoop}
         />
         <Button onClick={() => startTimerCountup()} disabled={timerState[0]}>
           start
@@ -132,7 +144,7 @@ const Standardized:React.FC<StandardizedProps> = ({id}) => {
       <div className="standardized__timechart">
         <StdTimechart
           id={id}
-          stdData={tableData.map((step,idx) => ({
+          stdData={tableData.map((step, idx) => ({
             index: idx,
             name: step.operation,
             value: step.HT,

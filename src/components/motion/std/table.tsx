@@ -21,12 +21,15 @@ const StdTable:React.FC<StdTableProps> = (props) => {
                 <th rowSpan={2}></th>
                 <th rowSpan={2}>Step</th>
                 <th rowSpan={2}>Operation</th>
-                <th colSpan={3}>Time</th>
+                <th rowSpan={2}>Standard</th>
+                <th colSpan={5}>Trial</th>
               </tr>
               <tr>
-                <th>H.T.</th>
-                <th>M.T.</th>
-                <th>W.T.</th>
+                <th>#1</th>
+                <th>#2</th>
+                <th>#3</th>
+                <th>#4</th>
+                <th>#5</th>
               </tr>
             </thead>
             <tbody>
@@ -51,8 +54,13 @@ const StdTable:React.FC<StdTableProps> = (props) => {
                     </Tooltip>
                   </td>
                   <td>{data.HT > 0 ? data.HT.toFixed(1) : ""}</td>
-                  <td>{data.MT > 0 ? data.MT.toFixed(1) : ""}</td>
-                  <td>{data.WT > 0 ? data.WT.toFixed(1) : ""}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  {/* <td>{data.MT > 0 ? data.MT.toFixed(1) : ""}</td>
+                  <td>{data.WT > 0 ? data.WT.toFixed(1) : ""}</td> */}
                 </tr>
               ))}
             </tbody>

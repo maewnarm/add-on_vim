@@ -16,7 +16,11 @@ const Motion = () => {
           Back
         </a>
         <p>
-          Add-on Virtual Interface Mapping - <span>Human motion</span>
+          Add-on Virtual Interface Mapping
+          <br/>
+          <span>[Lean Cardboard + e-Motion]</span>
+          <br/>
+          <p className="sub">{`(Human + Karakuri + Automation)`}</p>
         </p>
       </header>
       <div className="motion__wrapper">
@@ -26,9 +30,6 @@ const Motion = () => {
             <div className="motion__std__stdized__inner">
               <div className="motion__std__stdized__inner__element">
                 <Standardized id={1}/>
-              </div>
-              <div className="motion__std__stdized__inner__element">
-                <Standardized id={2}/>
               </div>
             </div>
           </div>

@@ -36,7 +36,6 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
       },
     ];
   }, [] as ChartDataType[]);
-  console.log(chartStdData);
   const createChart = () => {
     if (!chart) {
       const c = new Chart({

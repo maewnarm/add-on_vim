@@ -13,13 +13,14 @@
     padding: 0 0.75rem;
     width: fit-content;
     background-color: var(--color-3);
+    align-items: center;
     & p {
       margin: 0;
     }
   }
   &__table {
     overflow: auto;
-    height:60%;
+    height: 60%;
   }
   &__timechart {
     flex: 1;
@@ -41,10 +42,20 @@
           th {
             border: 1px solid black;
           }
-          tr:first-child th:first-child {
-            width: 20px;
-            border: 1px solid transparent;
-            border-right: inherit;
+          tr:first-child {
+            th:first-child {
+              width: 20px;
+              border: 1px solid transparent;
+              border-right: inherit;
+            }
+            th:nth-child(4) {
+              border-top: 3px solid blue;
+            }
+          }
+          tr:nth-child(2) {
+            th {
+              width: 40px;
+            }
           }
         }
         tbody {
@@ -58,6 +69,11 @@
                 font-size: 16px;
                 color: yellow;
               }
+            }
+          }
+          tr:last-child {
+            td:nth-child(4) {
+              border-bottom: 3px solid blue;
             }
           }
           td:not(td:nth-child(3)) {
@@ -75,6 +91,15 @@
               visibility: hidden;
             }
           }
+        }
+      }
+      thead,
+      tbody {
+        tr:first-child th:nth-child(4),
+        td:nth-child(4) {
+          background-color: lightblue;
+          border-right: 3px solid blue;
+          border-left: 3px solid blue;
         }
       }
       .step-row {
