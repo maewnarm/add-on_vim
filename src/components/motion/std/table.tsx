@@ -1,15 +1,20 @@
-import TimerUp from "@/components/timer/timerup";
 import { CaretRightOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
-import { TableDataType } from "./standardized";
+import { MotionContext, TableDataType } from "@/pages/motion/index";
 
 interface StdTableProps {
-  tableData: TableDataType[]
+  id: number;
 }
 
-const StdTable:React.FC<StdTableProps> = (props) => {
-  const {tableData} = props
+const StdTable: React.FC<StdTableProps> = (props) => {
+  const { id } = props;
+  const { tableData } = React.useContext(MotionContext);
+  const [totalStd, setTotalStd] = useState(0);
+
+  useEffect(() => {
+    setTotalStd(tableData.reduce((acc, data) => acc + data.HT, 0));
+  }, [tableData]);
 
   return (
     <div className="std-table custom-scrollbar">
@@ -34,11 +39,7 @@ const StdTable:React.FC<StdTableProps> = (props) => {
             </thead>
             <tbody>
               {tableData.map((data, idx) => (
-                <tr
-                  key={idx}
-                  className="step-row"
-                  id={`row-${idx + 1}`}
-                >
+                <tr key={idx} className="step-row" id={`row-${id}-${idx + 1}`}>
                   <td>
                     <CaretRightOutlined />
                   </td>
@@ -63,6 +64,16 @@ const StdTable:React.FC<StdTableProps> = (props) => {
                   <td>{data.WT > 0 ? data.WT.toFixed(1) : ""}</td> */}
                 </tr>
               ))}
+              <tr>
+                <td></td>
+                <td colSpan={2}>Total</td>
+                <td>{totalStd}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
             </tbody>
           </table>
         </div>

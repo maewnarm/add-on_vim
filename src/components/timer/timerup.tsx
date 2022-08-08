@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
+import { MotionContext } from "@/pages/motion/index";
 
 interface TimerProps {
   intervalTime_ms: number;
   start: boolean;
   pause?: boolean;
   stop: boolean;
+  end?: boolean;
   loop?: boolean;
   targetSecond?: number;
   targetStepSecond?: number[];
   stopFunction?: () => void;
   outputFunction?: () => void;
-  setStepFunction?: (step: number) => void;
+  setHighlightStepFunction?: (step: number) => void;
   showTimer?: boolean;
 }
 
@@ -20,26 +22,35 @@ const TimerUp: React.FC<TimerProps> = (props) => {
     start,
     pause,
     stop,
+    end,
     loop,
     targetSecond,
     targetStepSecond,
     outputFunction,
     stopFunction,
-    setStepFunction,
+    setHighlightStepFunction,
     showTimer,
   } = props;
+  const {
+    count,
+    step,
+    stepCount,
+    setCountFunction,
+    setStepFunction,
+    setStepCountFunction,
+    setTimerStateFunction,
+    setPlaybackRateFunction,
+    resetVideoFunction,
+  } = React.useContext(MotionContext);
   const mul = intervalTime_ms / 1000;
   const [timer, setTimer] = useState<NodeJS.Timer>();
-  const [count, setCount] = useState(0);
-  const [step, setStep] = useState(1);
-  const [stepCount, setStepCount] = useState(0);
   const [minutes, setMinutes] = useState("00");
   const [seconds, setSeconds] = useState("00");
   const timerCounter = useRef<() => void>();
   const [stopped, setStopped] = useState(false);
 
   const timerCountup = () => {
-    setCount(count + 1);
+    setCountFunction(count + 1);
   };
 
   const clearTimer = () => {
@@ -54,13 +65,13 @@ const TimerUp: React.FC<TimerProps> = (props) => {
     if (!start) return;
 
     if (timer) {
-      clearInterval(timer);
+      clearTimer();
     }
 
     if (stopped) {
-      setCount(0);
-      setStepCount(0);
-      setStep(1);
+      setCountFunction(0);
+      setStepCountFunction(0);
+      setStepFunction(1);
     }
 
     let interval = setInterval(() => {
@@ -82,9 +93,17 @@ const TimerUp: React.FC<TimerProps> = (props) => {
   useEffect(() => {
     if (!stop) return;
 
-    clearInterval(timer);
+    clearTimer();
+    setStepFunction(1);
     setStopped(true);
   }, [stop]);
+
+  useEffect(() => {
+    if (!end) return;
+
+    clearTimer();
+    setStopped(true);
+  }, [end]);
 
   useEffect(() => {
     return () => {
@@ -108,32 +127,39 @@ const TimerUp: React.FC<TimerProps> = (props) => {
     if (targetStepSecond) {
       const target = targetStepSecond[step - 1] * 10;
       if (stepCount === target) {
-        setStepCount(1);
-        setStep(step + 1);
+        setStepCountFunction(1);
+        setStepFunction(step + 1);
       } else {
-        setStepCount(stepCount + 1);
+        setStepCountFunction(stepCount + 1);
       }
     }
 
     if (targetSecond) {
-      if (!stopFunction) return;
+      // if (!stopFunction) return;
 
       if (count === targetSecond * 10) {
         if (loop) {
-          setCount(0);
-          setStepCount(0);
-          setStep(1);
+          setCountFunction(0);
+          setStepCountFunction(0);
+          setStepFunction(1);
+          resetVideoFunction();
         } else {
-          stopFunction();
+          // stopFunction();
+          setTimerStateFunction([false, false, false, true]);
         }
       }
     }
   }, [count]);
 
   useEffect(() => {
-    if (!setStepFunction) return;
+    if (!setHighlightStepFunction) return;
 
-    setStepFunction(step);
+    setHighlightStepFunction(step);
+    // if (step === 2) {
+    //   setPlaybackRateFunction(0.1);
+    // } else {
+    //   setPlaybackRateFunction(1)
+    // }
   }, [step]);
 
   return (

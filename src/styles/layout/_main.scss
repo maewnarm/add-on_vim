@@ -12,11 +12,13 @@ body {
   overflow: hidden;
   header {
     display: flex;
-    min-height: 10%;
+    position: relative;
+    // min-height: 10%;
     text-align: center;
     font-size: 3rem;
     font-weight: 300;
     a.back {
+      position: absolute;
       left: 10px;
       color: black;
       font-weight: normal;
@@ -25,17 +27,26 @@ body {
     p {
       margin: 0 auto;
       padding: 0 2rem;
-      span {
-        font-size: 3.5rem;
-        font-weight: 600;
-        font-style: italic;
-        // text-decoration: underline;
-        text-shadow: 1px 1px 2px rgb(130, 130, 130) ;
-      }
-      .sub {
-        font-size: 2rem;
-        margin-right: 20rem;
-      }
+    }
+    & > span:last-child {
+      position: absolute;
+      right: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-shadow: 2px 2px 4px rgb(153, 153, 153);
+    }
+  }
+  .sub-header {
+    text-align: center;
+    &-1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      font-style: italic;
+      text-shadow: 2px 2px 5px rgb(130, 130, 130);
+    }
+    &-2 {
+      font-size: 2rem;
+      color: rgb(110, 110, 110);
     }
   }
   main {

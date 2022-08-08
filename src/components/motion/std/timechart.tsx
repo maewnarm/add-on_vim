@@ -1,8 +1,11 @@
+import { MotionContext } from "@/pages/motion";
 import { Chart } from "@antv/g2";
 import React, { useEffect, useState } from "react";
 
 interface StdTimechartProps {
-  id: number
+  id: number;
+  intervalTime_ms: number;
+  targetSecond: number;
   stdData: StdDataType[];
 }
 
@@ -15,25 +18,25 @@ type StdDataType = {
 type ChartDataType = {
   index: number;
   name: string;
-  value: number[];
+  value: [number, number];
 };
 
 const StdTimechart: React.FC<StdTimechartProps> = (props) => {
-  const { id,stdData } = props;
+  const { id, intervalTime_ms, targetSecond, stdData } = props;
+  const { count, stepCount } = React.useContext(MotionContext);
   const [chart, setChart] = useState<Chart>();
   const [chartData, setChartData] = useState<ChartDataType[]>([]);
+  const [timeRangeData, setTimeRangeData] = useState<[number, number][]>([]);
   const chartStdData = stdData.reduce((acc, data) => {
-    console.log(acc);
-    const last = acc.length === 0 ? [0, 0] : acc[acc.length - 1].value;
+    const last = acc.length < 1 ? [0, 0] : acc[acc.length - 1].value;
     const sum = last[1];
-    console.log(sum);
     return [
       ...acc,
       {
         index: data.index + 1,
         name: data.name,
         value: [sum, sum + data.value],
-      },
+      } as ChartDataType,
     ];
   }, [] as ChartDataType[]);
   const createChart = () => {
@@ -41,7 +44,7 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
       const c = new Chart({
         container: `timechart-${id}`,
         autoFit: true,
-        padding: [35, 10, 10, 30],
+        padding: [40, 20, 10, 40],
       });
       setChart(c);
     }
@@ -55,8 +58,13 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
       .legend(false)
       .tooltip({
         customContent: (title, data) => {
-          const val:number[] = data[0]?.value.split("-");
-          return val && `(${data[0]?.data.index})  ${title}: ${(val[1] - val[0]).toFixed(1)} s.`;
+          const val: number[] = data[0]?.value.split("-");
+          return (
+            val &&
+            `(${data[0]?.data.index})  ${title}: ${(val[1] - val[0]).toFixed(
+              1
+            )} s.`
+          );
         },
         showMarkers: false,
         domStyles: {
@@ -91,37 +99,46 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
             fontSize: 12,
           },
         },
-        title:{
-          text: "Time",
+        title: {
+          text: "Time (s)",
           autoRotate: true,
           offset: 28,
           style: {
             fill: "#000",
             fontWeight: 700,
-          }
-        }
+          },
+        },
+      })
+      .scale("name", {
+        nice: true,
+        tickCount: 20,
       })
       .scale("value", {
         nice: true,
-        tickCount: 10,
+        tickInterval: 0.5,
+        max: Math.ceil(targetSecond),
         formatter: (value) => value.toFixed(1),
       })
       .interaction("element-active")
       .interval()
+      .animate(false)
       // .adjust("stack")
       .position("name*value")
-      .color("type*name", (type, name) => {
-        if (type === "noshow") {
-          return "#ffffff00";
-        } else {
-          return "#000";
-        }
-      });
+      .color("#888");
     chart.render();
   };
 
   useEffect(() => {
-    setChartData(chartStdData);
+    // setChartData(chartStdData);
+
+    // store time range value
+    setTimeRangeData(chartStdData.map((data) => data.value));
+    // delete time range value
+    let emptyChartData = [...chartStdData];
+    emptyChartData = emptyChartData.map((data) => ({ ...data, value: [0, 0] }));
+
+    setChartData(emptyChartData);
+
     createChart();
   }, []);
 
@@ -133,11 +150,47 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
 
   useEffect(() => {
     if (!chart) return;
+
     chart.changeData(chartData);
   }, [chartData]);
 
+  useEffect(() => {
+    const target = timeRangeData;
+    let data = chartData;
+    const mul = intervalTime_ms / 1000;
+    let rangeIndex = 0;
+    let time = 0;
+
+    if (count === 0) {
+      // reset data
+      data.forEach((_, idx) => (data[idx].value = [0, 0]));
+    }
+
+    target.every((range, idx) => {
+      time = count * mul;
+      if (time > range[0] && time <= range[1]) {
+        rangeIndex = idx;
+        return false;
+      }
+
+      return true;
+    });
+
+    if (!data[rangeIndex]) return;
+
+    data[rangeIndex].value = [
+      target[rangeIndex] ? target[rangeIndex][0] : 0,
+      target[rangeIndex] ? time : 0,
+    ];
+
+    if (!chart) return;
+
+    chart.changeData(data);
+  }, [count]);
+
   return (
     <div className="std-timechart custom-scrollbar">
+      <span className="y-label">Step</span>
       <div className="std-timechart__wrapper">
         <div
           id={`timechart-${id}`}
