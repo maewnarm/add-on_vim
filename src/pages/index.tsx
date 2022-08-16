@@ -1,5 +1,4 @@
-import Operation from "@/components/operation/operation";
-import Result from "@/components/result";
+import { ApiOutlined, IdcardOutlined, SmileOutlined } from "@ant-design/icons";
 import type { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -10,13 +9,32 @@ const Home: NextPage = () => {
   // console.log(p)
   return (
     <div className="main home">
-      <header>
-        <p>Add-on Virtual Interface Mapping</p>
-      </header>
       <div className="menu">
-        <p>Menu</p>
-        <Link href="/signal">Signal machine</Link>
-        <Link href="/motion">Human motion</Link>
+        <p className="menu__main">Menu</p>
+        <div className="menu__sub">
+          <p>Virtual Simulation</p>
+          <Link href="/motion">
+            <a>
+              <IdcardOutlined />
+              <span>e-Motion</span>
+            </a>
+          </Link>
+        </div>
+        <div className="menu__sub">
+          <p>Interface Mapping</p>
+          <Link href="/signal">
+            <a>
+              <ApiOutlined />
+              <span>Signal Interface</span>
+            </a>
+          </Link>
+          <Link href="/human">
+            <a>
+              <SmileOutlined />
+              <span>Human Interface</span>
+            </a>
+          </Link>
+        </div>
       </div>
     </div>
   );

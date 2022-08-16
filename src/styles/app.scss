@@ -1,5 +1,6 @@
+// package
 @import "~antd/dist/antd.css";
-@import '~video-react/styles/scss/video-react';
+@import "~video-react/styles/scss/video-react";
 
 // Abstracts
 @import "abstracts/variables";
@@ -10,16 +11,15 @@
 @import "base/common";
 
 // Components
-@import "components/operation";
-@import "components/projectTable";
-@import "components/signalTable";
-@import "components/motion/std";
-@import "components/motion/video";
-@import "components/motion/wip";
-@import "components/timer";
+@import "components/signal/main";
+@import "components/motion/main";
+@import "components/timer/timer";
 
 // Layout
 @import "layout/main";
+@import "layout/layout";
+@import "layout/navbar";
+@import "layout/footer";
 
 // Pages
 @import "pages/home";

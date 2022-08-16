@@ -1,8 +1,6 @@
-import Operation from "@/components/operation/operation";
-import Result from "@/components/result";
-import { LeftOutlined } from "@ant-design/icons";
+import Operation from "@/components/signal/operation/operation";
+import Result from "@/components/signal/result";
 import type { NextPage } from "next";
-import Link from "next/link";
 import { useRouter } from "next/router";
 
 const Signal: NextPage = () => {
@@ -10,16 +8,13 @@ const Signal: NextPage = () => {
   // const {p} = router.query
   // console.log(p)
   return (
-    <div className="main signal">
-      <header>
-        <a className="back" onClick={() => router.back()}>
-          <LeftOutlined />
-          Back
-        </a>
-        <p>
-          Add-on Virtual Interface Mapping - <span>Signal machine</span>
-        </p>
-      </header>
+    <div className="main signal custom-scrollbar">
+      <div className="sub-header sub-header-1">
+        <span>{"Interface Mapping"}</span>
+      </div>
+      <div className="sub-header sub-header-2">
+        <span>{"Machine Signals"}</span>
+      </div>
       <main>
         <Result />
         <Operation />

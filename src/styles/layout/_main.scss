@@ -7,35 +7,10 @@ body {
 }
 
 .main {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  header {
-    display: flex;
-    position: relative;
-    // min-height: 10%;
-    text-align: center;
-    font-size: 3rem;
-    font-weight: 300;
-    a.back {
-      position: absolute;
-      left: 10px;
-      color: black;
-      font-weight: normal;
-      text-decoration: underline;
-    }
-    p {
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
-    & > span:last-child {
-      position: absolute;
-      right: 10px;
-      font-size: 1rem;
-      font-weight: 600;
-      text-shadow: 2px 2px 4px rgb(153, 153, 153);
-    }
-  }
+  // width: 100vw;
+  // height: 100vh;
+  height: calc(100vh - 100px);
+  overflow: auto;
   .sub-header {
     text-align: center;
     &-1 {

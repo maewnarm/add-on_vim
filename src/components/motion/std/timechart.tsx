@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 interface StdTimechartProps {
   id: number;
   intervalTime_ms: number;
+  subCount: number;
   targetSecond: number;
   stdData: StdDataType[];
 }
@@ -22,8 +23,8 @@ type ChartDataType = {
 };
 
 const StdTimechart: React.FC<StdTimechartProps> = (props) => {
-  const { id, intervalTime_ms, targetSecond, stdData } = props;
-  const { count, stepCount } = React.useContext(MotionContext);
+  const { id, intervalTime_ms, subCount, targetSecond, stdData } = props;
+  // const { count, stepCount } = React.useContext(MotionContext);
   const [chart, setChart] = useState<Chart>();
   const [chartData, setChartData] = useState<ChartDataType[]>([]);
   const [timeRangeData, setTimeRangeData] = useState<[number, number][]>([]);
@@ -115,7 +116,7 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
       })
       .scale("value", {
         nice: true,
-        tickInterval: 0.5,
+        tickInterval: 1,
         max: Math.ceil(targetSecond),
         formatter: (value) => value.toFixed(1),
       })
@@ -150,25 +151,28 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
 
   useEffect(() => {
     if (!chart) return;
-
+    
     chart.changeData(chartData);
   }, [chartData]);
 
   useEffect(() => {
     const target = timeRangeData;
-    let data = chartData;
+    let data = [...chartData];
     const mul = intervalTime_ms / 1000;
     let rangeIndex = 0;
-    let time = 0;
+    let subCountSecond = Math.round(subCount * mul * 10) / 10;
 
-    if (count === 0) {
+    if (subCountSecond === targetSecond) {
+      return;
+    }
+
+    if (subCount === 0) {
       // reset data
       data.forEach((_, idx) => (data[idx].value = [0, 0]));
     }
 
     target.every((range, idx) => {
-      time = count * mul;
-      if (time > range[0] && time <= range[1]) {
+      if (subCountSecond > range[0] && subCountSecond <= range[1]) {
         rangeIndex = idx;
         return false;
       }
@@ -180,13 +184,13 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
 
     data[rangeIndex].value = [
       target[rangeIndex] ? target[rangeIndex][0] : 0,
-      target[rangeIndex] ? time : 0,
+      target[rangeIndex] ? subCountSecond : 0,
     ];
 
     if (!chart) return;
 
     chart.changeData(data);
-  }, [count]);
+  }, [subCount]);
 
   return (
     <div className="std-timechart custom-scrollbar">
@@ -195,7 +199,7 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
         <div
           id={`timechart-${id}`}
           className="std-timechart__wrapper__chart"
-          style={{ height: 200 }}
+          style={{ height: 200, width: 330 }}
         />
       </div>
     </div>

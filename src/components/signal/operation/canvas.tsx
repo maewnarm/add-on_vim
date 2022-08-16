@@ -8,7 +8,7 @@ import {
   Selection,
   Select,
 } from "@react-three/postprocessing";
-import Machine from "@/components/objects/machine";
+import Machine from "@/components/signal/objects/machine";
 import { HighlightTarget } from "@/types/canvas";
 import Menu from "./menu";
 import { OperationContext } from "./operation";

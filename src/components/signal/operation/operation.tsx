@@ -2,6 +2,7 @@ import { ProjectType } from "@/types/data";
 import { MachineSignalType } from "@/types/setting";
 import React, { useState } from "react";
 import { createContext } from "react";
+import Operate from "../operate";
 import { SettingTable } from "../tables/settingTable";
 import CanvasObject from "./canvas";
 
@@ -38,10 +39,14 @@ const Operation = () => {
   return (
     <OperationContext.Provider value={project}>
       <div className="operation">
-        <aside className="operation__setting">
+        <div className="operation__setting custom-scrollbar">
           <p>Setting</p>
           <SettingTable />
-        </aside>
+        </div>
+        <div className="operation__operate custom-scrollbar">
+          <p>Signal Interface</p>
+          <Operate />
+        </div>
         <div className="operation__interface">
           <p>{`3D Interface${
             project.project_name && ` [${project.project_name}]`

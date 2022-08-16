@@ -1,4 +1,4 @@
-import { ProjectDataContextType } from "@/components/operation/operation";
+import { ProjectDataContextType } from "@/components/signal/operation/operation";
 import fetcher from "@/lib/fetcher";
 import { ProjectToSignalCategoryType } from "@/types/data";
 import { MachineSignalType, SignalType } from "@/types/setting";

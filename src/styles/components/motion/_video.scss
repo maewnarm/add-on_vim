@@ -11,9 +11,10 @@
       max-width: 95%;
       padding: 0 0.8rem;
       margin: 0 auto;
-      border-radius: 1.5rem;
+      border-radius: 0.5rem;
       font-size: 1.2rem;
       background-color: white;
+      box-shadow: 3px 3px 10px rgb(100, 100, 100);
       span {
         margin-right: 0.3rem;
         &:first-child {
@@ -22,6 +23,7 @@
         }
         &:last-child {
           font-weight: 600;
+          font-style: italic;
         }
       }
     }

@@ -1,16 +1,16 @@
-import "../styles/app.scss";
+import "@/styles/app.scss";
 import type { AppProps } from "next/app";
-import Script from "next/script";
 import Head from "next/head";
+import Layout from "@/components/layout";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <>
-      <Head >
-        <title>Add-on Virtual Interface Mapping Signals</title>
+    <Layout>
+      <Head>
+        <title>DX Automation Apps</title>
       </Head>
       <Component {...pageProps} />
-    </>
+    </Layout>
   );
 }
 

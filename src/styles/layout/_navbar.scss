@@ -1,0 +1,39 @@
+.navbar {
+  display: flex;
+  position: sticky;
+  flex-direction: row;
+  background-color: rgb(220, 0, 50);
+  font-size: 1.5rem;
+  color: white;
+  align-items: center;
+  height: 50px;
+  padding: 0 1rem;
+  span {
+    text-align: center;
+  }
+  a.back {
+    position: absolute;
+    left: 0.5rem;
+    display: flex;
+    height: 70%;
+    align-items: center;
+    font-weight: normal;
+    color: white !important;
+    * {
+      height: 100%;
+    }
+    img {
+      margin-left: 0.2rem;
+      filter: brightness(0) saturate(100%) invert(98%) sepia(2%) saturate(392%) hue-rotate(290deg) brightness(116%) contrast(100%);
+    }
+  }
+  .title {
+    margin: 0 auto;
+    font-weight: 700;
+    font-size: 2rem;
+    letter-spacing: 5px;
+    text-decoration: underline;
+    font-style: italic;
+    text-shadow: 1px 1px 3px black;
+  }
+}

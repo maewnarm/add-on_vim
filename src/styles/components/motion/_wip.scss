@@ -1,18 +1,21 @@
 .wip {
   position: absolute;
   z-index: 3;
-  top: 50%;
   font-size: 16px;
-  background-color: white;
+  background-color: #bb97ffd0;
   border-radius: 1rem;
-  p {
-    margin: 0;
-    padding: 0 0.5rem;
-  }
-  &__amount {
-    font-weight: 600;
-    &::after {
-      content: " pcs.";
+  text-align: center;
+  &__wrapper {
+    position: relative;
+    p {
+      margin: 0;
+      padding: 0 1rem;
+      line-height: 1.5rem;
+    }
+    &__amount {
+      font-size: 2.5rem;
+      font-weight: 600;
+      padding: 0.5rem 0 !important;
     }
   }
 }

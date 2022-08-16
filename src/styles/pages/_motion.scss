@@ -65,9 +65,10 @@
       }
       &__inner {
         display: flex;
+        flex-direction: row;
+        // flex-direction: column;
         flex: 1;
         height: fit-content;
-        flex-direction: column;
         border: 1px solid black;
         border-radius: 5px;
         margin: 0 0 1rem 3rem;

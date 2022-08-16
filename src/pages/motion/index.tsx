@@ -1,6 +1,7 @@
 import Standardized from "@/components/motion/std/standardized";
 import Video from "@/components/motion/std/video";
 import WIP from "@/components/motion/std/wip";
+import TimerUp from "@/components/timer/timerup";
 import {
   CloseCircleFilled,
   LeftOutlined,
@@ -12,6 +13,9 @@ import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
 import { useRef } from "react";
 
+// TODO re-confirm loop video play
+// TODO render video focus outline operation
+
 export type TableDataType = {
   operation: string;
   HT: number;
@@ -19,7 +23,60 @@ export type TableDataType = {
   WT: number;
 };
 
-const tableData: TableDataType[] = [
+const tableAddon: TableDataType[] = [
+  {
+    operation: "Pick work from Conveyor supply, place at Groove check unit",
+    HT: 2.8,
+    MT: 0,
+    WT: 0,
+  },
+  {
+    operation: "Move to Insulator insert M/C",
+    HT: 1.8,
+    MT: 0,
+    WT: 0,
+  },
+  {
+    operation:
+      "Pick work from Insulator insert M/C, place at Mouth forming unit",
+    HT: 2.6,
+    MT: 0,
+    WT: 0,
+  },
+  {
+    operation: "Move to lifter",
+    HT: 1.4,
+    MT: 0,
+    WT: 0,
+  },
+  {
+    operation: "Pick work from Lifter, place at Conveyor welding",
+    HT: 2.6,
+    MT: 0,
+    WT: 0,
+  },
+  {
+    operation: "Move to Groove check unit",
+    HT: 1.7,
+    MT: 0,
+    WT: 0,
+  },
+  {
+    operation:
+      "Pick work from Groove check unit, place at Insulator insert M/C",
+    HT: 1.9,
+    MT: 0,
+    WT: 0,
+  },
+  {
+    operation: "Move to Conveyor supply",
+    HT: 2.1,
+    MT: 0,
+    WT: 0,
+  },
+];
+
+const tableOP1: TableDataType[] = [
   {
     operation: "(R) Pick work from roller, set to Welding m/c",
     HT: 1.0,
@@ -62,20 +119,26 @@ const tableData: TableDataType[] = [
   },
 ];
 
+const tableData: TableDataType[][] = [tableAddon, tableOP1];
+
 const defaultMotionContext = {
   tableData: tableData,
   count: 0,
-  step: 0,
-  stepCount: 0,
+  step: [0],
+  // stepCount: [0],
   timerState: [false, false, false, false],
   playbackRate: 1,
   setCountFunction: (value: number) => {},
-  setStepFunction: (value: number) => {},
-  setStepCountFunction: (value: number) => {},
-  setTimerStateFunction: (value: boolean[]) => {},
+  setStepFunction: (id: number, value: number) => {},
+  // setStepCountFunction: (id: number, value: number) => {},
+  setTimerStateFunction: (id: number, value: boolean[]) => {},
   setPlaybackRateFunction: (value: number) => {},
-  resetVideoFunction: () => {},
-  setResetVideoFunction: (func: () => void) => {},
+  playVideoFunction: (id: number) => {},
+  pauseVideoFunction: (id: number) => {},
+  resetVideoFunction: (id: number) => {},
+  setPlayVideoFunctions: (id: number, func: () => void) => {},
+  setPauseVideoFunctions: (id: number, func: () => void) => {},
+  setResetVideoFunctions: (id: number, func: () => void) => {},
 };
 
 export const MotionContext = React.createContext(defaultMotionContext);
@@ -83,45 +146,64 @@ export const MotionContext = React.createContext(defaultMotionContext);
 const Motion = () => {
   const router = useRouter();
   const [count, setCount] = useState(0);
-  const [step, setStep] = useState(1);
-  const [stepCount, setStepCount] = useState(0);
+  const [step, setStep] = useState<number[]>([0, 0]);
+  // const [stepCount, setStepCount] = useState<number[]>([0, 0]);
   // timerState = [play,pause,stop,end]
-  const [timerState, setTimerState] = useState([false, false, false, false]);
+  const [timerState, setTimerState] = useState<boolean[]>([
+    false,
+    false,
+    false,
+    false,
+  ]);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [isLoop, setIsLoop] = useState(false);
-  const resetVideo = useRef(() => {});
+  const [wip, setWip] = useState<number[]>([0]);
+  const playVideo = useRef([() => {}]);
+  const pauseVideo = useRef([() => {}]);
+  const resetVideo = useRef([() => {}]);
   const context = useMemo(
     () => ({
       tableData,
       count,
       step,
-      stepCount,
+      // stepCount,
       timerState,
       playbackRate,
       setCountFunction,
       setStepFunction,
-      setStepCountFunction,
+      // setStepCountFunction,
       setTimerStateFunction,
       setPlaybackRateFunction,
+      playVideoFunction,
+      pauseVideoFunction,
       resetVideoFunction,
-      setResetVideoFunction,
+      setPlayVideoFunctions,
+      setPauseVideoFunctions,
+      setResetVideoFunctions,
     }),
-    [count, step, stepCount, timerState, playbackRate]
+    [count, step, timerState, playbackRate, playVideo, resetVideo]
   );
 
   function setCountFunction(value: number) {
     setCount(value);
   }
 
-  function setStepFunction(value: number) {
-    setStep(value);
+  function setStepFunction(id: number, value: number) {
+    const newValue = [...step];
+    newValue[id] = value;
+    setStep(newValue);
   }
 
-  function setStepCountFunction(value: number) {
-    setStepCount(value);
-  }
+  // function setStepCountFunction(id: number, value: number) {
+  //   const newValue = [...stepCount];
+  //   newValue[id] = value;
+  //   setStepCount(newValue);
+  // }
 
-  function setTimerStateFunction(value: boolean[]) {
+  function setTimerStateFunction(id: number, value: boolean[]) {
+    // const newValue = [...timerState]
+    // newValue[id] = value
+    // setTimerState(newValue);
     setTimerState(value);
   }
 
@@ -130,23 +212,56 @@ const Motion = () => {
   }
 
   function startTimerCountup() {
+    // let newValue = [...timerState]
+    // newValue = newValue.map(()=>[true, false, false, false])
+    // setTimerState(newValue);
     setTimerState([true, false, false, false]);
   }
 
   function pauseTimerCountup() {
+    // let newValue = [...timerState]
+    // newValue = newValue.map(() => [false, true, false, false])
+    // setTimerState(newValue);
     setTimerState([false, true, false, false]);
   }
 
   function stopTimerCountup() {
+    // let newValue = [...timerState]
+    // newValue = newValue.map(() => [false, false, true, false])
+    // setTimerState(newValue);
     setTimerState([false, false, true, false]);
   }
 
-  function resetVideoFunction() {
-    resetVideo.current();
+  function playVideoFunction(id: number) {
+    playVideo.current[id]();
   }
 
-  function setResetVideoFunction(func: () => void) {
-    resetVideo.current = func;
+  function pauseVideoFunction(id: number) {
+    pauseVideo.current[id]();
+  }
+
+  function resetVideoFunction(id: number) {
+    resetVideo.current[id]();
+  }
+
+  function setPlayVideoFunctions(id: number, func: () => void) {
+    playVideo.current[id] = func;
+  }
+
+  function setPauseVideoFunctions(id: number, func: () => void) {
+    pauseVideo.current[id] = func;
+  }
+
+  function setResetVideoFunctions(id: number, func: () => void) {
+    resetVideo.current[id] = func;
+  }
+
+  function setWipFunction(id: number, increment: number) {
+    // console.log("set wip", wip);
+    const newWip = [...wip];
+    newWip[id] += increment;
+    // console.log("newWip", newWip);
+    setWip(newWip);
   }
 
   const triggerLoop = () => {
@@ -156,14 +271,6 @@ const Motion = () => {
   return (
     <MotionContext.Provider value={context}>
       <div className="main motion">
-        <header>
-          <a className="back" onClick={() => router.back()}>
-            <LeftOutlined />
-            Back
-          </a>
-          <p>Add-on Virtual Interface Mapping</p>
-          <span>Developed by PE-BPK</span>
-        </header>
         <div className="sub-header sub-header-1">
           <span>{"Lean Cardboard   +   e-Motion"}</span>
         </div>
@@ -171,6 +278,11 @@ const Motion = () => {
           <span>{"(Human + Karakuri + Automation)"}</span>
         </div>
         <div className="motion__operation">
+          <TimerUp
+            intervalTime_ms={100}
+            start={timerState[0]}
+            pause={timerState[1] || timerState[2]}
+          />
           <Button
             type="ghost"
             shape="round"
@@ -212,9 +324,31 @@ const Motion = () => {
               <div className="motion__std__stdized__inner">
                 <div className="motion__std__stdized__inner__element">
                   <Standardized
-                    id={1}
+                    key={0}
+                    id={0}
+                    name={"Add-on"}
                     timerState={timerState}
                     isLoop={isLoop}
+                    wipAddAt={"end"}
+                    wipAddId={0}
+                    wipAddIncrement={1}
+                    setWipFunction={setWipFunction}
+                    setWipAfterStep={7}
+                    setWipAfterStepDelaySecond={0.2}
+                  />
+                </div>
+                <div className="motion__std__stdized__inner__element">
+                  <Standardized
+                    key={1}
+                    id={1}
+                    name={"OP1"}
+                    timerState={timerState}
+                    isLoop={isLoop}
+                    referencedWipCount={wip[0]}
+                    wipRemoveAt={"start"}
+                    wipRemoveId={0}
+                    wipRemoveIncrement={-1}
+                    setWipFunction={setWipFunction}
                   />
                 </div>
               </div>
@@ -223,14 +357,20 @@ const Motion = () => {
           <div className="motion__divider" />
           <div className="motion__virtual">
             <div className="motion__virtual__video">
-              <Video id={1} src="/videos/OP1.mp4" playbackRate={playbackRate}>
-                <WIP id={1} amount={1} style={{ right: -50 }} />
-              </Video>
               <Video
                 id={1}
+                name={"OP1"}
+                src="/videos/OP1.mp4"
+                playbackRate={playbackRate}
+              ></Video>
+              <Video
+                id={0}
+                name={"Add-on"}
                 src="/videos/Add-on.mp4"
                 playbackRate={playbackRate}
-              />
+              >
+                <WIP id={0} amount={wip} style={{ top: "37%", left: -30 }} />
+              </Video>
             </div>
           </div>
         </div>
