@@ -12,6 +12,7 @@ type OperateTableType = {
 type OperateTableSignalType = {
   id: number;
   signal: string;
+  address: string;
   status: boolean;
 };
 
@@ -23,13 +24,13 @@ const tableData: OperateTableType[] = [
     unitName: "MC_1",
     signals: [
       [
-        { id: 1, signal: "Home position", status: false },
-        { id: 2, signal: "Master check", status: false },
+        { id: 1, signal: "Home position", address: "W100.00", status: false },
+        { id: 2, signal: "Master check", address: "W100.01", status: false },
       ],
       [],
       [
-        { id: 5, signal: "Tool change", status: false },
-        { id: 6, signal: "Part supply", status: false },
+        { id: 5, signal: "Tool change", address: "W300.00", status: false },
+        { id: 6, signal: "Part supply", address: "W300.01", status: false },
       ],
     ],
   },
@@ -38,16 +39,16 @@ const tableData: OperateTableType[] = [
     unitName: "MC_1",
     signals: [
       [
-        { id: 1, signal: "Home position", status: false },
-        { id: 2, signal: "Master check", status: false },
+        { id: 1, signal: "Home position", address: "W100.00", status: false },
+        { id: 2, signal: "Master check", address: "W100.01", status: false },
       ],
       [
-        { id: 3, signal: "Work NG", status: false },
-        { id: 4, signal: "Fault stop", status: false },
+        { id: 3, signal: "Work NG", address: "W200.00", status: false },
+        { id: 4, signal: "Fault stop", address: "W200.01", status: false },
       ],
       [
-        { id: 5, signal: "Tool change", status: false },
-        { id: 6, signal: "Part supply", status: false },
+        { id: 5, signal: "Tool change", address: "W300.00", status: false },
+        { id: 6, signal: "Part supply", address: "W300.01", status: false },
       ],
     ],
   },
@@ -161,6 +162,15 @@ const Operate = () => {
                   {signal.signal}
                 </a>
               </td>
+              <td
+                className={`body__signal__new ${
+                  idxType + 1 === 3 &&
+                  idxSignal + 1 === rowSignal &&
+                  "bottom-thick"
+                }`}
+              >
+                {signal.address}
+              </td>
             </tr>
           );
         });
@@ -171,7 +181,7 @@ const Operate = () => {
 
   return (
     <div className="operate">
-      <div className="operate__wrapper">
+      <div className="operate__wrapper custom-scrollbar">
         <div className="operate__wrapper__table">
           <table>
             <thead className="header">
@@ -181,11 +191,14 @@ const Operate = () => {
                   Signal Type
                 </th>
                 <th rowSpan={2} className="header__title__vm">
-                  Virtual MC
+                  Current MC
                 </th>
                 <th rowSpan={2} className="header__title__padding" />
                 <th rowSpan={2} className="header__title__new">
                   New MC (Add-on)
+                </th>
+                <th rowSpan={2} className="header__title__new">
+                  Address
                 </th>
               </tr>
               <tr>

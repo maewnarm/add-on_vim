@@ -1,0 +1,23 @@
+.time-interface {
+  max-width: 33vh;
+  width: fit-content;
+  .table-wrapper {
+    font-size: 1rem;
+    overflow-y: auto;
+    table {
+      th,
+      td {
+        background-color: whitesmoke;
+        padding: 0.2rem 0.5rem;
+        border: 1px solid black;
+        white-space: nowrap;
+      }
+      .body {
+        &__stdtime {
+          text-align: center;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}

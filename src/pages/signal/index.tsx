@@ -10,13 +10,13 @@ const Signal: NextPage = () => {
   return (
     <div className="main signal custom-scrollbar">
       <div className="sub-header sub-header-1">
-        <span>{"Interface Mapping"}</span>
+        <span>{"Real Interface"}</span>
       </div>
       <div className="sub-header sub-header-2">
         <span>{"Machine Signals"}</span>
       </div>
       <main>
-        <Result />
+        {/* <Result /> */}
         <Operation />
       </main>
     </div>

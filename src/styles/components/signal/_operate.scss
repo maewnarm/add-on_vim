@@ -1,5 +1,7 @@
 .operate {
+  max-width: 33vw;
   &__wrapper {
+    overflow-x: auto;
     &__table {
       font-size: 1rem;
       width: fit-content;
@@ -9,6 +11,7 @@
           background-color: whitesmoke;
           border: 1px solid black;
           border-spacing: 10px;
+          white-space: nowrap;
         }
         .header {
           &__title {
@@ -92,7 +95,7 @@
                   --color-status: #59ce8f;
                 }
                 &.off {
-                  --color-status: #ff1e00;
+                  --color-status: #ff6e5b;
                 }
                 &::before {
                   content: "";
