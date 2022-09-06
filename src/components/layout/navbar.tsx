@@ -14,7 +14,7 @@ const Navbar = () => {
           <img src="/denso-vector-logo.svg" alt="denso-logo" />
         </a>
       </Tooltip>
-      <span className="title">Production Engineer - DX Automation</span>
+      <span className="title">DX Engineer - Automation Development</span>
     </div>
   );
 };

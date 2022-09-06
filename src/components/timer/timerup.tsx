@@ -21,7 +21,8 @@ const TimerUp: React.FC<TimerUpProps> = (props) => {
   const {
     intervalTime_ms,
     start,
-    pause
+    pause,
+    // showTimer,
   } = props;
   const {
     setCountFunction,

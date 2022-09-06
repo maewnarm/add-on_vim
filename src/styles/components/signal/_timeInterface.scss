@@ -1,10 +1,12 @@
 .time-interface {
-  max-width: 33vh;
-  width: fit-content;
-  .table-wrapper {
-    font-size: 1rem;
+  height: 90%;
+  overflow: auto;
+  &__wrapper {
+    font-size: 1.2rem;
     overflow-y: auto;
+    margin-left: 0.5rem;
     table {
+      width: 100%;
       th,
       td {
         background-color: whitesmoke;

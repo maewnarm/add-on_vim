@@ -59,7 +59,7 @@ const tableData: OperateTableType[] = [
 // TODO receive signal from MQTT subscribe and listen to change signal vm/new MC status
 // TODO create caption label in ThreeJS canvas
 
-const Operate = () => {
+const SignalInterface = () => {
   const [client, setClient] = useState<mqtt.MqttClient>();
   const [tableBody, setTableBody] = useState<JSX.Element[]>([]);
 
@@ -180,9 +180,9 @@ const Operate = () => {
   }, [tableData]);
 
   return (
-    <div className="operate">
-      <div className="operate__wrapper custom-scrollbar">
-        <div className="operate__wrapper__table">
+    <div className="signal-interface custom-scrollbar">
+      <div className="signal-interface__wrapper">
+        <div className="signal-interface__wrapper__table">
           <table>
             <thead className="header">
               <tr>
@@ -214,4 +214,4 @@ const Operate = () => {
   );
 };
 
-export default Operate;
+export default SignalInterface;

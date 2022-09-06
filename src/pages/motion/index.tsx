@@ -1,7 +1,7 @@
 import Standardized from "@/components/motion/std/standardized";
 import Video from "@/components/motion/std/video";
 import WIP from "@/components/motion/std/wip";
-import TimerUp from "@/components/timer/timerup";
+import TimerUp from "@/components/timer/timerUp";
 import {
   CloseCircleFilled,
   LeftOutlined,

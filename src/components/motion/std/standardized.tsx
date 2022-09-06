@@ -1,5 +1,4 @@
 import TimeCatcher from "@/components/timer/timeCatcher";
-import TimerUp from "@/components/timer/timeCatcher";
 import { MotionContext } from "@/pages/motion";
 import { ClockCircleFilled } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";

@@ -27,6 +27,7 @@
     "video-react": "^0.15.0"
   },
   "devDependencies": {
+    "@types/debounce": "^1.2.1",
     "@types/node": "18.0.0",
     "@types/react": "18.0.14",
     "@types/react-dom": "18.0.5",

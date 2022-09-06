@@ -1,16 +1,17 @@
-.operate {
-  max-width: 33vw;
+.signal-interface {
+  overflow: auto;
+  height: 90%;
   &__wrapper {
     overflow-x: auto;
+    margin-left: 0.5rem;
     &__table {
-      font-size: 1rem;
+      font-size: 1.2rem;
       width: fit-content;
       table {
         th,
         td {
           background-color: whitesmoke;
           border: 1px solid black;
-          border-spacing: 10px;
           white-space: nowrap;
         }
         .header {
@@ -99,7 +100,7 @@
                 }
                 &::before {
                   content: "";
-                  padding-right: 21px;
+                  padding-right: 28px;
                   margin-right: 4px;
                   border-radius: 50%;
                   background-color: var(--color-status);

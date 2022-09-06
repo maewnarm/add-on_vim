@@ -2,11 +2,13 @@ import { ProjectType } from "@/types/data";
 import { MachineSignalType } from "@/types/setting";
 import React, { useState } from "react";
 import { createContext } from "react";
-import Operate from "../operate";
+import SignalInterface from "../signal";
 import Result from "../result";
 import { SettingTable } from "../tables/settingTable";
-import TimeInterface from "../time";
+import TimeInterface, { IntervalTypes } from "../time";
 import CanvasObject from "./canvas";
+import { Divider, Tabs } from "antd";
+import TimeStepline from "../timestep";
 
 export type ProjectDataContextType = ProjectType & {
   project_data: MachineSignalType;
@@ -15,6 +17,8 @@ export type ProjectDataContextType = ProjectType & {
 
 type OperationContextType = ProjectDataContextType & {
   set: (proj: ProjectDataContextType) => void;
+  intervalData: IntervalTypes[];
+  setIntervalData: (data: IntervalTypes[]) => void;
 };
 
 export const OperationContext = createContext<OperationContextType>({
@@ -23,6 +27,8 @@ export const OperationContext = createContext<OperationContextType>({
   project_data: {},
   isLoading: false,
   set: () => {},
+  intervalData: [],
+  setIntervalData: () => {},
 });
 
 const Operation = () => {
@@ -32,40 +38,41 @@ const Operation = () => {
     project_data: {},
     isLoading: false,
     set: set,
+    intervalData: [],
+    setIntervalData: setIntervalDataFunction,
   });
 
   function set(proj: ProjectDataContextType) {
     setProject({ ...project, ...proj });
   }
 
+  function setIntervalDataFunction(data: IntervalTypes[]) {
+    setProject({ ...project, intervalData: data });
+  }
+
   return (
     <OperationContext.Provider value={project}>
-      <div className="operation">
-        {/* <div className="operation__setting custom-scrollbar">
-          <p>Setting</p>
-          <SettingTable />
-        </div> */}
-        <div className="operation__operate custom-scrollbar">
-          <p>Signal Interface</p>
-          <Operate />
-        </div>
-        {/* <div className="operation__interface">
-          <p>{`3D Interface${
-            project.project_name && ` [${project.project_name}]`
-          }`}</p>
-          <div className="operation__interface__guide">
-            <b>Left click</b>
-            <p>: rotate</p>
-            <b>Right click</b>
-            <p>: move</p>
+      <div className="operation custom-scrollbar">
+        <div className="operation__interface">
+          <Tabs className="operation__interface__setting">
+            <Tabs.TabPane tab="Signal Interface" key="signal">
+              <div className="operation__signal">
+                <SignalInterface />
+              </div>
+            </Tabs.TabPane>
+            <Tabs.TabPane tab="Time Interface" key="time">
+              <div className="operation__time">
+                <TimeInterface />
+              </div>
+            </Tabs.TabPane>
+          </Tabs>
+          <Divider
+            style={{ marginTop: 10, marginBottom: 0, borderTopColor: "gray" }}
+          />
+          <div className="operation__interface__stepline">
+            <p>Machine Signal Timeline</p>
+            <TimeStepline />
           </div>
-          <div id="canvas" className="operation__interface__canvas">
-            <CanvasObject />
-          </div>
-        </div> */}
-        <div className="operation__time custom-scrollbar">
-          <p>Time interface</p>
-          <TimeInterface />
         </div>
         <div className="operation__result custom-scrollbar">
           <p>Trial Result</p>

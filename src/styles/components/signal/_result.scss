@@ -55,14 +55,13 @@
 
 .result {
   p {
-    font-size: 3rem;
     & > span {
       font-weight: 600;
     }
   }
   & > div {
     display: flex;
-    margin-left: 2rem;
+    padding-left: 2rem;
   }
   & > div > div {
     display: flex;
@@ -77,24 +76,108 @@
       }
     }
   }
-  &__mor {
-    &__value {
-      color: blue;
+  // &__detail {
+  //   & > div {
+  //     width: 40%;
+  //   }
+  // }
+  &__target {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    * {
+      font-size: 2rem;
+    }
+    &__wrapper {
+      justify-content: left;
+      width: fit-content;
+    }
+    &__input {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      & input {
+        width: 100%;
+        text-align: center;
+      }
+      .ant-input-number {
+        width: 180px;
+        &-group-addon {
+          width: 150px;
+        }
+      }
     }
   }
-  &__loss {
-    &__value {
-      color: red;
+  &__running {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 2.4rem;
+    align-items: center;
+    width: 60%;
+    padding: 1rem;
+    margin-right: 1rem;
+    border: 1px solid black;
+    border-radius: 20px;
+    box-shadow: 2px 2px 5px gray;
+    background-color: var(--color-3);
+    & > div > div {
+      display: flex;
+      width: fit-content;
+      & > div {
+        display: flex;
+        margin-left: 0.5rem;
+      }
+    }
+    button {
+      font-size: 1.5rem;
+      height: fit-content;
+    }
+    &__wrapper {
+      display: flex;
+      flex-direction: column;
+      width: fit-content;
+      margin-right: auto;
+    }
+    &__time {
+      display: flex;
+      flex-direction: column;
+      font-weight: normal;
+      &__button {
+        display: flex;
+        gap: 0.5rem;
+      }
+    }
+    &__mor {
+      &__value {
+        color: blue;
+      }
+    }
+    &__loss {
+      &__value {
+        color: red;
+      }
+    }
+    &__ct {
+      &__value {
+        color: green;
+      }
+    }
+    &__amount {
+      &__value {
+        display: flex;
+        gap: 0.5rem;
+      }
     }
   }
-  &__ct {
-    &__value {
-      color: green;
-    }
-  }
+
   &__graph {
     font-size: 2.5rem;
     text-decoration: underline;
     margin-top: 2rem;
+    gap: 2rem;
+    &__ct {
+      flex: 1;
+    }
   }
 }
