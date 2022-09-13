@@ -1,12 +1,8 @@
 import { ApiOutlined, IdcardOutlined, SmileOutlined } from "@ant-design/icons";
 import type { NextPage } from "next";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
-  const router = useRouter();
-  // const {p} = router.query
-  // console.log(p)
   return (
     <div className="main home">
       <div className="menu">

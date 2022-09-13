@@ -1,0 +1,118 @@
+{
+  "addon-stator-insu": [
+    [
+      {
+        "operation": "Pick work from Conveyor supply, place at Groove check unit",
+        "HT": 2.8,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Move to Insulator insert M/C",
+        "HT": 1.8,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Pick work from Insulator insert M/C, place at Mouth forming unit",
+        "HT": 2.6,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Move to lifter",
+        "HT": 1.4,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Pick work from Lifter, place at Conveyor welding",
+        "HT": 2.6,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Move to Groove check unit",
+        "HT": 1.7,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Pick work from Groove check unit, place at Insulator insert M/C",
+        "HT": 1.9,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Move to Conveyor supply",
+        "HT": 2.1,
+        "MT": 0,
+        "WT": 0
+      }
+    ],
+    [
+      {
+        "operation": "(R) Pick work from roller, set to Welding m/c",
+        "HT": 1.0,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "(L) Pick work from Welding m/c",
+        "HT": 0.8,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "(R) Push nagara switch Welding m/c",
+        "HT": 0.9,
+        "MT": 18.0,
+        "WT": 0
+      },
+      {
+        "operation": "(R+L) Appearance check welding point",
+        "HT": 2.9,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "(L) Pick work from Brushing m/c, place on roller",
+        "HT": 0.9,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "(R) Set work to Brushing m/c, push nagara switch",
+        "HT": 1.0,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "(R) Pick stator core from box, appearance core sheet",
+        "HT": 2.8,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "(L) Pick work from jig, (R) Set stator core to pallet, push nagara switch",
+        "HT": 1.2,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "(R+L) Appearance check welding point, place on roller, return to waiting position",
+        "HT": 2.3,
+        "MT": 0,
+        "WT": 0
+      }
+    ],
+    [
+      {
+        "operation": "(R) Pick work from roller, set to Welding m/c",
+        "HT": 1.0,
+        "MT": 0,
+        "WT": 0
+      }
+    ]
+  ]
+}

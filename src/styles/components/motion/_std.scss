@@ -63,8 +63,6 @@
             &:nth-child(4) {
               // word-break: break-all;
               width: 40px;
-            }
-            &:nth-child(4) {
               border-top: 3px solid blue;
             }
           }
@@ -96,7 +94,7 @@
         }
         tr:not(:last-child) {
           td {
-            max-width: 100px;
+            max-width: 200px;
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;

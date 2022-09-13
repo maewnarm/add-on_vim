@@ -1,6 +1,6 @@
 export type ProjectType = {
-  project_id: number
-  project_name: string
+  projectId: number
+  projectName: string
 }
 
 export type ProjectToSignalCategoryType = {

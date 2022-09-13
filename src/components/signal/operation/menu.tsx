@@ -10,7 +10,7 @@ interface MenuProps {
 
 const Menu: React.FC<MenuProps> = (props) => {
   const { targetId } = props;
-  const { project_data } = useContext(OperationContext);
+  const { projectData } = useContext(OperationContext);
   const [isShow, setIsShow] = useState(false);
   const [signals, setSignals] = useState<SignalType>({});
 
@@ -18,15 +18,15 @@ const Menu: React.FC<MenuProps> = (props) => {
     message.info(
       <span>
         Send signal: <b>{text}</b> from{" "}
-        <b>{project_data[targetId]?.machine_name}</b>
+        <b>{projectData[targetId]?.machine_name}</b>
       </span>,
       3
     );
   }
 
   useEffect(() => {
-    setSignals(project_data[targetId]?.signals);
-  }, [targetId, project_data]);
+    setSignals(projectData[targetId]?.signals);
+  }, [targetId, projectData]);
 
   useEffect(() => {
     const menu = document.getElementById("menu");
@@ -36,7 +36,7 @@ const Menu: React.FC<MenuProps> = (props) => {
   return (
     <div id="menu">
       <div className="menu-wrapper">
-        <p>{`Menu: ${project_data[targetId]?.machine_name}` || "No signals"}</p>
+        <p>{`Menu: ${projectData[targetId]?.machine_name}` || "No signals"}</p>
         <div className="menu-button">
           <Space direction="vertical">
             {signals &&

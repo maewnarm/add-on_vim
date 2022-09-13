@@ -20,6 +20,17 @@
       width: 50%;
     }
   }
+  &__project {
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+    font-weight: 500;
+    .ant-select {
+      min-width: 300px;
+      max-width: 300px;
+      margin-left: 1rem;
+      text-align: left;
+      font-size: 1.2rem;
+    }
+  }
 }
-
-

@@ -1,7 +1,7 @@
 import { CaretRightOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
-import { MotionContext, TableDataType } from "@/pages/motion/index";
+import { MotionContext} from "@/pages/motion/index";
 
 interface StdTableProps {
   id: number;
@@ -13,7 +13,7 @@ const StdTable: React.FC<StdTableProps> = (props) => {
   const [totalStd, setTotalStd] = useState(0);
 
   useEffect(() => {
-    setTotalStd(tableData[id].reduce((acc, data) => acc + data.HT, 0));
+    setTotalStd(tableData[id]?.reduce((acc, data) => acc + data.HT, 0));
   }, [tableData]);
 
   return (
@@ -26,18 +26,18 @@ const StdTable: React.FC<StdTableProps> = (props) => {
               <th rowSpan={2}>Step</th>
               <th rowSpan={2}>Operation</th>
               <th rowSpan={2}>Std.</th>
-              <th colSpan={5}>Trial</th>
+              {/* <th colSpan={5}>Trial</th> */}
             </tr>
-            <tr>
+            {/* <tr>
               <th>#1</th>
               <th>#2</th>
               <th>#3</th>
               <th>#4</th>
               <th>#5</th>
-            </tr>
+            </tr> */}
           </thead>
           <tbody>
-            {tableData[id].map((data, idx) => (
+            {tableData[id]?.map((data, idx) => (
               <tr
                 key={idx}
                 className={`step-row-${id}`}
@@ -58,11 +58,11 @@ const StdTable: React.FC<StdTableProps> = (props) => {
                   </Tooltip>
                 </td>
                 <td>{data.HT > 0 ? data.HT.toFixed(1) : ""}</td>
+                {/* <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
-                <td></td>
+                <td></td> */}
                 {/* <td>{data.MT > 0 ? data.MT.toFixed(1) : ""}</td>
                   <td>{data.WT > 0 ? data.WT.toFixed(1) : ""}</td> */}
               </tr>
@@ -71,11 +71,11 @@ const StdTable: React.FC<StdTableProps> = (props) => {
               <td></td>
               <td colSpan={2}>Total</td>
               <td>{totalStd}</td>
+              {/* <td></td>
               <td></td>
               <td></td>
               <td></td>
-              <td></td>
-              <td></td>
+              <td></td> */}
             </tr>
           </tbody>
         </table>

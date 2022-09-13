@@ -28,7 +28,7 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
   const [chart, setChart] = useState<Chart>();
   const [chartData, setChartData] = useState<ChartDataType[]>([]);
   const [timeRangeData, setTimeRangeData] = useState<[number, number][]>([]);
-  const chartStdData = stdData.reduce((acc, data) => {
+  const chartStdData = stdData?.reduce((acc, data) => {
     const last = acc.length < 1 ? [0, 0] : acc[acc.length - 1].value;
     const sum = last[1];
     return [
@@ -39,7 +39,7 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
         value: [sum, sum + data.value],
       } as ChartDataType,
     ];
-  }, [] as ChartDataType[]);
+  }, [] as ChartDataType[]) || [];
   const createChart = () => {
     if (!chart) {
       const c = new Chart({
@@ -199,7 +199,7 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
         <div
           id={`timechart-${id}`}
           className="std-timechart__wrapper__chart"
-          style={{ height: 200, width: 330 }}
+          style={{ height: 200, width: 300 }}
         />
       </div>
     </div>

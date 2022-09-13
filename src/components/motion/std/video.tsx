@@ -87,7 +87,7 @@ const Video: React.FC<VideoProps> = (props) => {
 
     // set reset video function
     setResetVideoFunctions(id, resetVideo);
-  }, []);
+  }, [tableData]);
 
   useEffect(() => {
     countRef.current = count;
@@ -131,11 +131,13 @@ const Video: React.FC<VideoProps> = (props) => {
       <div className="video__label" style={{ bottom: 30 }}>
         <p>
           <span>{name || "..."} - </span>
-          <span>{tableData[id][step[id] - 1]?.operation || "Waiting ..."}</span>
           <span>
-            {tableData[id][step[id] - 1]
-              ? `[${tableData[id][step[id] - 1].HT} s.]`
-              : ""}
+            {tableData[id]
+              ? tableData[id][step[id] - 1]?.operation
+              : "Waiting ..."}
+          </span>
+          <span>
+            {tableData[id] ? `[${tableData[id][step[id] - 1]?.HT} s.]` : ""}
           </span>
         </p>
       </div>
@@ -147,7 +149,7 @@ const Video: React.FC<VideoProps> = (props) => {
         preload={"auto"}
       >
         <source src={src} type="video/mp4" />
-        <ControlBar autoHide autoHideTime={500} />
+        <ControlBar autoHide autoHideTime={500} disableCompletely />
       </Player>
     </div>
   );

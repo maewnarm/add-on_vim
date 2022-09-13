@@ -1,6 +1,6 @@
 import mqtt from "mqtt";
 export const MQTTConnection = (host: string, port: number) => {
-  console.log("Connection");
+  console.log("start MQTT Connection");
   const url = `ws://${host}:${port}/mqtt`;
   const options: mqtt.IClientOptions = {
     host: host,
@@ -14,7 +14,7 @@ export const MQTTConnection = (host: string, port: number) => {
     connectTimeout: 30 * 1000,
     will: {
       topic: "WillMsg",
-      payload: "Connection Closed abnormally ...",
+      payload: "MQTT Connection Closed abnormally ...",
       qos: 0,
       retain: false,
     },

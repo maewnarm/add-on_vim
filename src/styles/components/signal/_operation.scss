@@ -29,11 +29,44 @@
     .ant-tabs {
       &-nav-list {
         * {
-          font-size: 1.5rem;
+          font-size: 2rem;
         }
       }
       &-content-holder {
         overflow: scroll;
+        &::-webkit-scrollbar {
+          width: 10px;
+          height: 10px;
+        }
+        &::-webkit-scrollbar-track {
+          background: var(--color-4);
+          border-radius: 5px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background: var(--color-2);
+          border-radius: 5px;
+          &:hover {
+            background: var(--color-1);
+          }
+        }
+        &::-webkit-scrollbar-corner {
+          background: transparent;
+        }
+        &::-webkit-scrollbar-track-piece {
+          background-color: var(--color-3);
+          border-radius: 5px;
+        }
+      }
+      &-tab {
+        &-active {
+          div {
+            color: "#277BC0" !important;
+            font-weight: 600;
+          }
+        }
+      }
+      &-ink-bar {
+        background-color: "#277BC0";
       }
     }
   }

@@ -14,19 +14,12 @@ interface TimerUpProps {
   // stopFunction?: () => void;
   // outputFunction?: () => void;
   // setHighlightStepFunction?: (step: number) => void;
-  // showTimer?: boolean;
+  showTimer?: boolean;
 }
 
 const TimerUp: React.FC<TimerUpProps> = (props) => {
-  const {
-    intervalTime_ms,
-    start,
-    pause,
-    // showTimer,
-  } = props;
-  const {
-    setCountFunction,
-  } = React.useContext(MotionContext);
+  const { intervalTime_ms, start, pause, showTimer } = props;
+  const { setCountFunction } = React.useContext(MotionContext);
   const mul = intervalTime_ms / 1000;
   const [timer, setTimer] = useState<NodeJS.Timer>();
   const [subCount, setSubCount] = useState(0);
@@ -82,7 +75,7 @@ const TimerUp: React.FC<TimerUpProps> = (props) => {
     };
   }, []);
 
-  return <div className="timer timer-up">{subCount}</div>;
+  return <div className="timer timer-up">{showTimer && subCount}</div>;
 };
 
 export default TimerUp;

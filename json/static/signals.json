@@ -1,0 +1,124 @@
+{
+  "addon-stator-insu": [
+    {
+      "unitNo": 1,
+      "unitName": "MC_1",
+      "signals": [
+        [
+          {
+            "id": 1,
+            "signal": "Home position",
+            "address": "W100.00",
+            "status": false
+          },
+          {
+            "id": 2,
+            "signal": "Master check",
+            "address": "W100.01",
+            "status": false
+          }
+        ],
+        [],
+        [
+          {
+            "id": 5,
+            "signal": "Tool change",
+            "address": "W300.00",
+            "status": false
+          },
+          {
+            "id": 6,
+            "signal": "Part supply",
+            "address": "W300.01",
+            "status": false
+          }
+        ]
+      ]
+    },
+    {
+      "unitNo": 2,
+      "unitName": "MC_1",
+      "signals": [
+        [
+          {
+            "id": 1,
+            "signal": "Home position",
+            "address": "W100.00",
+            "status": false
+          },
+          {
+            "id": 2,
+            "signal": "Master check",
+            "address": "W100.01",
+            "status": false
+          }
+        ],
+        [
+          {
+            "id": 3,
+            "signal": "Work NG",
+            "address": "W200.00",
+            "status": false
+          },
+          {
+            "id": 4,
+            "signal": "Fault stop",
+            "address": "W200.01",
+            "status": false
+          }
+        ],
+        [
+          {
+            "id": 5,
+            "signal": "Tool change",
+            "address": "W300.00",
+            "status": false
+          },
+          {
+            "id": 6,
+            "signal": "Part supply",
+            "address": "W300.01",
+            "status": false
+          }
+        ]
+      ]
+    }
+  ],
+  "addon-gcu-mold-terminal": [
+    {
+      "unitNo": 1,
+      "unitName": "MC_1",
+      "signals": [
+        [
+          {
+            "id": 1,
+            "signal": "Home position",
+            "address": "W100.00",
+            "status": false
+          },
+          {
+            "id": 2,
+            "signal": "Master check",
+            "address": "W100.01",
+            "status": false
+          }
+        ],
+        [],
+        [
+          {
+            "id": 5,
+            "signal": "Tool change",
+            "address": "W300.00",
+            "status": false
+          },
+          {
+            "id": 6,
+            "signal": "Part supply",
+            "address": "W300.01",
+            "status": false
+          }
+        ]
+      ]
+    }
+  ]
+}

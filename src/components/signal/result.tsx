@@ -7,9 +7,10 @@ import {
 import { Chart } from "@antv/g2";
 import { debounce } from "debounce";
 import { Button, InputNumber } from "antd";
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useEffect, useMemo, useState, useRef, useContext } from "react";
 import TimerCountdown from "../timer/timerCountdown";
 import { OperationContext } from "./operation/operation";
+import { MainContext } from "@/pages/_app";
 
 type MORChartDataType = {
   name: string;
@@ -25,6 +26,7 @@ type CTChartDataType = {
 export const defaultMachineSignalContext = {
   setCountFunction: (count: number) => {},
   setPlanFunction: (plan: number) => {},
+  actualAmount: 0,
   setActualFunction: (plan: number) => {},
 };
 
@@ -32,9 +34,14 @@ export const MachineSignalContext = React.createContext(
   defaultMachineSignalContext
 );
 
+// TODO fix debounce to real debouncing
+// TODO initial ct chart to show target
+// TODO hide overflow of MOR chart
+
 const Result = () => {
-  const { intervalData } = React.useContext(OperationContext);
   const mul = 0.1; // interval 100 ms / standard interval 1000 ms
+  const { mqttClient } = useContext(MainContext);
+  const { projectName } = useContext(OperationContext);
   const [morChart, setMorChart] = useState<Chart>();
   const [ctChart, setCtChart] = useState<Chart>();
   const [morChartData, setMorChartData] = useState<MORChartDataType[]>([]);
@@ -42,7 +49,7 @@ const Result = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [ctSelected, setCtSelected] = useState(0);
   const [count, setCount] = useState(0);
-  const lastCount = useRef<number>(0);
+  const lastCount = useRef<number>(Date.now());
   const [targetHour, setTargetHour] = useState(1);
   const [targetMinute, setTargetMinute] = useState(0);
   const [targetCt, setTargetCt] = useState(10);
@@ -58,10 +65,13 @@ const Result = () => {
   const [plan, setPlan] = useState(0);
   const [actual, setActual] = useState(0);
   const [amountColor, setAmountColor] = useState("blue");
+  const addActual = useRef(() => {});
+  const addCtChartData = useRef(
+    (payload: { topic: string; message: any }) => {}
+  );
   const reRender = useMemo(
     () =>
       debounce(() => {
-        console.log("rerender");
         if (!ctChart) return;
 
         ctChart.clear();
@@ -70,21 +80,15 @@ const Result = () => {
       }, 1000),
     [targetCt]
   );
-  // TODO fix debounce to real debouncing
-  // TODO reduce time when actual % interval of time interface change
-  // TODO bind signal and time interface by Tabs
-  // TODO add step line chart for monitor signal sequence
-  // TODO connect to mqtt public broker (free)
-  // TODO initial ct chart to show target
-  // TODO hide overflow of MOR chart
 
   const context = useMemo(
     () => ({
       setCountFunction: setCount,
       setPlanFunction: setPlan,
+      actualAmount: actual,
       setActualFunction: setActual,
     }),
-    []
+    [actual]
   );
 
   const createMORChart = () => {
@@ -285,8 +289,8 @@ const Result = () => {
     // @ts-ignore
     ctChart.on("element:click", (ev) => {
       const { data } = ev.data;
-      console.log("click");
-      console.log(data.ct);
+      // console.log("click");
+      // console.log(data.ct);
       setIsModalVisible(true);
       setCtSelected(data.ct);
     });
@@ -311,14 +315,46 @@ const Result = () => {
     setStop(true);
   }
 
-  function addActual() {
-    setActual(actual + 1);
-  }
+  const setAddActualFunction = useMemo(() => {
+    addActual.current = () => setActual(actual + 1);
+  }, [actual]);
+
+  const setAddCtChartDataFunction = useMemo(() => {
+    addCtChartData.current = (payload: { topic: string; message: any }) => {
+      // set ct chart data
+      const currentData = [...ctChartData];
+      currentData.push({
+        index: currentData.length,
+        ct: payload.message.ct,
+      });
+      setCtChartData(currentData);
+    };
+  }, [ctChartData]);
 
   useEffect(() => {
     createMORChart();
     createCTChart();
   }, []);
+
+  useEffect(() => {
+    if (!mqttClient) return;
+
+    mqttClient.on("message", (topic, message) => {
+      const payload = { topic, message: JSON.parse(message.toString()) };
+      const [, , , type, data] = topic.split("/");
+      console.log(type, data);
+      if (type !== "result") return;
+
+      if (data === "actual") {
+        console.log("result actual input");
+        addActual.current();
+        addCtChartData.current(payload);
+      }
+    });
+    mqttClient.subscribe(
+      `${process.env.NEXT_PUBLIC_TOPIC_UUID}/${projectName}/from_mc/result/actual`
+    );
+  }, [mqttClient, projectName]);
 
   useEffect(() => {
     if (!morChart) return;
@@ -345,7 +381,6 @@ const Result = () => {
     const avgCt =
       ctChartData.reduce((acc, { ct }) => acc + ct, 0) / ctChartData.length;
     setResultCt(avgCt.toFixed(2));
-    console.log("ctChartData ", ctChartData);
 
     ctChart.changeData(ctChartData);
   }, [ctChartData]);
@@ -357,7 +392,7 @@ const Result = () => {
   useEffect(() => {
     if (!play) return;
 
-    lastCount.current = count;
+    lastCount.current = Date.now();
   }, [play]);
 
   useEffect(() => {
@@ -381,30 +416,14 @@ const Result = () => {
 
   useEffect(() => {
     if (actual === 0) return;
-    const ct = Math.round((lastCount.current - count) * mul * 10) / 10;
-    lastCount.current = count;
-    console.log("ct : ", ct);
 
-    // set ct chart data
-    const currentData = [...ctChartData];
-    currentData.push({
-      index: currentData.length,
-      ct: ct,
-    });
-    setCtChartData(currentData);
-
-    // reduce when reach interval target
-    intervalData.forEach((interval) => {
-      if (actual % interval.intervalNumber === 0) {
-        setCount(count - interval.stdTime / mul);
-        // TODO fix to reduce time at subCount instead
-      }
-    });
+    // const currentTime = Date.now();
+    // const ct =
+    //   Math.round((Math.abs(lastCount.current - currentTime) / 1000) * 10) / 10;
+    // lastCount.current = currentTime;
   }, [actual]);
 
   useEffect(() => {
-    console.log("actual and plan");
-    console.log(actual, plan);
     // calculate mor
     let mor = 0;
     if (actual > 0 && plan === 0) {
@@ -534,7 +553,7 @@ const Result = () => {
                     shape="round"
                     type={"default"}
                     icon={<PlusCircleFilled />}
-                    onClick={() => addActual()}
+                    onClick={() => addActual.current()}
                   >
                     Add
                   </Button>
@@ -567,13 +586,6 @@ const Result = () => {
                   <p style={{ marginLeft: 8 }}>%</p>
                 </div>
               </div>
-              <div className="result__running__ct">
-                <p>Avg CT : </p>
-                <div className="result__running__ct__value">
-                  <p>{resultCt}</p>
-                  <p style={{ marginLeft: 8 }}>s.</p>
-                </div>
-              </div>
               <div className="result__running__amount">
                 <p>Amount : </p>
                 <div
@@ -584,6 +596,13 @@ const Result = () => {
                   <p>/</p>
                   <p>{plan}</p>
                   <p>pcs.</p>
+                </div>
+              </div>
+              <div className="result__running__ct">
+                <p>Avg CT : </p>
+                <div className="result__running__ct__value">
+                  <p>{resultCt}</p>
+                  <p style={{ marginLeft: 8 }}>s.</p>
                 </div>
               </div>
             </div>

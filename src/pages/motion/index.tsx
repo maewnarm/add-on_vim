@@ -1,128 +1,23 @@
 import Standardized from "@/components/motion/std/standardized";
 import Video from "@/components/motion/std/video";
 import WIP from "@/components/motion/std/wip";
+import ProjectSelector from "@/components/selector/projects";
 import TimerUp from "@/components/timer/timerUp";
+import { TableDataType } from "@/types/motion";
 import {
   CloseCircleFilled,
   LeftOutlined,
   PauseCircleFilled,
   PlayCircleFilled,
 } from "@ant-design/icons";
-import { Button, Switch } from "antd";
-import { useRouter } from "next/router";
-import React, { useMemo, useState } from "react";
+import { Button, Select, Switch } from "antd";
+import React, { useMemo, useState, useEffect, useContext } from "react";
 import { useRef } from "react";
 
-// TODO re-confirm loop video play
 // TODO render video focus outline operation
 
-export type TableDataType = {
-  operation: string;
-  HT: number;
-  MT: number;
-  WT: number;
-};
-
-const tableAddon: TableDataType[] = [
-  {
-    operation: "Pick work from Conveyor supply, place at Groove check unit",
-    HT: 2.8,
-    MT: 0,
-    WT: 0,
-  },
-  {
-    operation: "Move to Insulator insert M/C",
-    HT: 1.8,
-    MT: 0,
-    WT: 0,
-  },
-  {
-    operation:
-      "Pick work from Insulator insert M/C, place at Mouth forming unit",
-    HT: 2.6,
-    MT: 0,
-    WT: 0,
-  },
-  {
-    operation: "Move to lifter",
-    HT: 1.4,
-    MT: 0,
-    WT: 0,
-  },
-  {
-    operation: "Pick work from Lifter, place at Conveyor welding",
-    HT: 2.6,
-    MT: 0,
-    WT: 0,
-  },
-  {
-    operation: "Move to Groove check unit",
-    HT: 1.7,
-    MT: 0,
-    WT: 0,
-  },
-  {
-    operation:
-      "Pick work from Groove check unit, place at Insulator insert M/C",
-    HT: 1.9,
-    MT: 0,
-    WT: 0,
-  },
-  {
-    operation: "Move to Conveyor supply",
-    HT: 2.1,
-    MT: 0,
-    WT: 0,
-  },
-];
-
-const tableOP1: TableDataType[] = [
-  {
-    operation: "(R) Pick work from roller, set to Welding m/c",
-    HT: 1.0,
-    MT: 0,
-    WT: 0,
-  },
-  { operation: "(L) Pick work from Welding m/c", HT: 0.8, MT: 0, WT: 0 },
-  { operation: "(R) Push nagara switch Welding m/c", HT: 0.9, MT: 18.0, WT: 0 },
-  { operation: "(R+L) Appearance check welding point", HT: 2.9, MT: 0, WT: 0 },
-  {
-    operation: "(L) Pick work from Brushing m/c, place on roller",
-    HT: 0.9,
-    MT: 0,
-    WT: 0,
-  },
-  {
-    operation: "(R) Set work to Brushing m/c, push nagara switch",
-    HT: 1.0,
-    MT: 0,
-    WT: 0,
-  },
-  {
-    operation: "(R) Pick stator core from box, appearance core sheet",
-    HT: 2.8,
-    MT: 0,
-    WT: 0,
-  },
-  {
-    operation:
-      "(L) Pick work from jig, (R) Set stator core to pallet, push nagara switch",
-    HT: 1.2,
-    MT: 0,
-    WT: 0,
-  },
-  {
-    operation: "(R+L) Appearance check welding point, place on roller",
-    HT: 2.3,
-    MT: 0,
-    WT: 0,
-  },
-];
-
-const tableData: TableDataType[][] = [tableAddon, tableOP1];
-
 const defaultMotionContext = {
-  tableData: tableData,
+  tableData: [] as TableDataType[][],
   count: 0,
   step: [0],
   // stepCount: [0],
@@ -144,9 +39,10 @@ const defaultMotionContext = {
 export const MotionContext = React.createContext(defaultMotionContext);
 
 const Motion = () => {
-  const router = useRouter();
+  const [projectName, setProjectName] = useState("");
   const [count, setCount] = useState(0);
   const [step, setStep] = useState<number[]>([0, 0]);
+  const [tableData, setTableData] = useState<TableDataType[][]>([]);
   // const [stepCount, setStepCount] = useState<number[]>([0, 0]);
   // timerState = [play,pause,stop,end]
   const [timerState, setTimerState] = useState<boolean[]>([
@@ -181,8 +77,17 @@ const Motion = () => {
       setPauseVideoFunctions,
       setResetVideoFunctions,
     }),
-    [count, step, timerState, playbackRate, playVideo, resetVideo]
+    [tableData, count, step, timerState, playbackRate, playVideo, resetVideo]
   );
+
+  const loadTableData = async () => {
+    await fetch(`/api/static/get?filePath=static_standardized.json`).then(
+      async (res) => {
+        const data = JSON.parse(await res.json());
+        setTableData(data[projectName] || []);
+      }
+    );
+  };
 
   function setCountFunction(value: number) {
     setCount(value);
@@ -268,6 +173,14 @@ const Motion = () => {
     setIsLoop(!isLoop);
   };
 
+  useEffect(() => {
+    loadTableData();
+  }, [projectName]);
+
+  useEffect(() => {
+    console.log(tableData);
+  }, [tableData]);
+
   return (
     <MotionContext.Provider value={context}>
       <div className="main motion">
@@ -278,6 +191,10 @@ const Motion = () => {
           <span>{"(Human + Karakuri + Automation)"}</span>
         </div>
         <div className="motion__operation">
+          <div className="signal__project">
+            [Project :
+            <ProjectSelector set={setProjectName} />]
+          </div>
           <TimerUp
             intervalTime_ms={100}
             start={timerState[0]}
@@ -351,6 +268,15 @@ const Motion = () => {
                     setWipFunction={setWipFunction}
                   />
                 </div>
+                <div className="motion__std__stdized__inner__element">
+                  <Standardized
+                    key={2}
+                    id={2}
+                    name={"Outline"}
+                    timerState={timerState}
+                    isLoop={isLoop}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -371,6 +297,13 @@ const Motion = () => {
               >
                 <WIP id={0} amount={wip} style={{ top: "37%", left: -30 }} />
               </Video>
+              <Video
+                id={2}
+                name={"OP1"}
+                src="/videos/OP1.mp4"
+                playbackRate={playbackRate}
+              ></Video>
+              {/* TODO add video outline */}
             </div>
           </div>
         </div>

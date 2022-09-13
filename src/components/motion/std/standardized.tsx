@@ -37,13 +37,13 @@ const Standardized: React.FC<StandardizedProps> = (props) => {
     wipRemoveIncrement,
     setWipFunction,
     setWipAfterStep,
-    setWipAfterStepDelaySecond
+    setWipAfterStepDelaySecond,
   } = props;
   const { tableData } = React.useContext(MotionContext);
   const [highlightRow, setHighlightRow] = useState(0);
   const [subCount, setSubCount] = useState(0);
   const [targetCT, setTargetCT] = useState(
-    tableData[id].reduce((acc, data) => acc + data.HT, 0)
+    tableData[id]?.reduce((acc, data) => acc + data.HT, 0) || 0
   );
 
   const setHighlightPosition = (targetId: string) => {
@@ -87,7 +87,7 @@ const Standardized: React.FC<StandardizedProps> = (props) => {
           end={timerState[3]}
           loop={isLoop}
           targetSecond={targetCT}
-          targetStepSecond={tableData[id].map((step) => step.HT)}
+          targetStepSecond={tableData[id]?.map((step) => step.HT || 0)}
           referencedCounter={referencedWipCount}
           startCounterId={
             wipAddAt === "start"
@@ -134,7 +134,7 @@ const Standardized: React.FC<StandardizedProps> = (props) => {
           intervalTime_ms={100}
           subCount={subCount}
           targetSecond={targetCT}
-          stdData={tableData[id].map((step, idx) => ({
+          stdData={tableData[id]?.map((step, idx) => ({
             index: idx,
             name: step.operation,
             value: step.HT,

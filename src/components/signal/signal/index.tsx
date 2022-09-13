@@ -1,97 +1,113 @@
-import { MQTTConnection } from "@/lib/mqtt";
+import {
+  OperateTableType,
+  OperateTableSignalType,
+  OperationContext,
+} from "../operation/operation";
 import { ArrowRightOutlined, LineOutlined } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
-import mqtt from "mqtt";
-
-type OperateTableType = {
-  unitNo: number;
-  unitName: string;
-  signals: OperateTableSignalType[][]; // [[signals of type-1],[signal of type-2],...]
-};
-
-type OperateTableSignalType = {
-  id: number;
-  signal: string;
-  address: string;
-  status: boolean;
-};
-
-const signalTypes = ["MC condition", "Abnormal", "Setup"];
-
-const tableData: OperateTableType[] = [
-  {
-    unitNo: 1,
-    unitName: "MC_1",
-    signals: [
-      [
-        { id: 1, signal: "Home position", address: "W100.00", status: false },
-        { id: 2, signal: "Master check", address: "W100.01", status: false },
-      ],
-      [],
-      [
-        { id: 5, signal: "Tool change", address: "W300.00", status: false },
-        { id: 6, signal: "Part supply", address: "W300.01", status: false },
-      ],
-    ],
-  },
-  {
-    unitNo: 2,
-    unitName: "MC_1",
-    signals: [
-      [
-        { id: 1, signal: "Home position", address: "W100.00", status: false },
-        { id: 2, signal: "Master check", address: "W100.01", status: false },
-      ],
-      [
-        { id: 3, signal: "Work NG", address: "W200.00", status: false },
-        { id: 4, signal: "Fault stop", address: "W200.01", status: false },
-      ],
-      [
-        { id: 5, signal: "Tool change", address: "W300.00", status: false },
-        { id: 6, signal: "Part supply", address: "W300.01", status: false },
-      ],
-    ],
-  },
-];
-
-// TODO install MQTT package
-// TODO send signal when trigger to MQTT broker
-// TODO receive signal from MQTT subscribe and listen to change signal vm/new MC status
-// TODO create caption label in ThreeJS canvas
+import React, { useContext, useEffect, useRef, useState, useMemo } from "react";
+import { MainContext } from "@/pages/_app";
 
 const SignalInterface = () => {
-  const [client, setClient] = useState<mqtt.MqttClient>();
+  const { mqttClient } = useContext(MainContext);
+  const { projectName, signalTypeData, signalData } =
+    useContext(OperationContext);
+  const [tableData, setTableData] = useState<OperateTableType[]>(signalData);
   const [tableBody, setTableBody] = useState<JSX.Element[]>([]);
+  const triggerSignal = useRef<
+    (
+      unit: OperateTableType,
+      signal: OperateTableSignalType,
+      idxType: number,
+      idxSignal: number
+    ) => void
+  >(() => {});
+  const receiveSignal = useRef<
+    (payload: { topic: string; message: any }) => void
+  >(() => {});
 
-  const triggerSignal = (unit: number, signal: string) => {
-    console.log("trigger signal ", unit, signal);
-  };
+  const setTriggerSignalFunction = useMemo(() => {
+    triggerSignal.current = (
+      unit: OperateTableType,
+      signal: OperateTableSignalType,
+      idxType: number,
+      idxSignal: number
+    ) => {
+      if (!mqttClient) return;
+
+      const data = JSON.stringify({
+        value: signal.status ? 0 : 1,
+      });
+
+      // console.table({
+      //   topic: process.env.NEXT_PUBLIC_TOPIC_UUID,
+      //   unit: unit.unitName,
+      //   signal: signal.signal,
+      //   data: data,
+      // });
+      mqttClient.publish(
+        `${process.env.NEXT_PUBLIC_TOPIC_UUID}/${projectName}/to_mc/${unit.unitName}/${signal.address}/${idxType}/${idxSignal}`,
+        data
+      );
+    };
+  }, [projectName]);
+
+  const setReceiveSignalFunction = useMemo(() => {
+    receiveSignal.current = (payload: { topic: string; message: any }) => {
+      const [, , project, type, unitName, address, idxType, idxSignal] =
+        payload.topic.split("/");
+      const { value } = payload.message;
+
+      if (type !== "signal") return;
+
+      console.log("on receiveSignal");
+      console.table({
+        project: project,
+        unitName: unitName,
+        address: address,
+        idxType: idxType,
+        idxSignal: idxSignal,
+        value: value,
+      });
+      let newTableData: OperateTableType[] = JSON.parse(
+        JSON.stringify(tableData)
+      );
+      newTableData = newTableData.map((unitData) => {
+        if (unitData.unitName === unitName) {
+          if (unitData.signals[parseInt(idxType)][parseInt(idxSignal)]) {
+            unitData.signals[parseInt(idxType)][parseInt(idxSignal)].status =
+              !!value;
+          }
+        }
+        return unitData;
+      });
+      setTableData(newTableData);
+    };
+  }, [tableData]);
 
   useEffect(() => {
-    setClient(MQTTConnection("127.0.0.1", 8083));
-  }, []);
-
-  useEffect(() => {
-    if (client) {
-      client.on("connect", () => {
-        console.log("Connected");
-      });
-      client.on("error", (err) => {
-        console.error("Connection error: ", err);
-      });
-      client.on("reconnect", () => {
-        console.warn("Reconnecting");
-      });
-      client.on("disconnect", () => {
-        console.error("Disconnected");
-      });
-      client.on("message", (topic, message) => {
+    if (mqttClient) {
+      mqttClient.on("message", (topic, message) => {
         const payload = { topic, message: JSON.parse(message.toString()) };
-        console.log(payload);
+        const [, , , type] = topic.split("/");
+        if (type === "signal") {
+          receiveSignal.current(payload);
+        }
       });
-      client.subscribe("test");
     }
-  }, [client]);
+  }, [mqttClient]);
+
+  useEffect(() => {
+    // update table signal data refer project name
+    setTableData(signalData);
+  }, [projectName]);
+
+  useEffect(() => {
+    if (!mqttClient) return;
+
+    mqttClient.subscribe(
+      `${process.env.NEXT_PUBLIC_TOPIC_UUID}/${projectName}/from_mc/signal/#`
+    );
+  }, [mqttClient, projectName]);
 
   useEffect(() => {
     const body: JSX.Element[] = [];
@@ -122,9 +138,9 @@ const SignalInterface = () => {
                   className={`body__type ${
                     idxType + 1 === 3 && "bottom-thick"
                   }`}
-                  title={signalTypes[idxType]}
+                  title={signalTypeData[idxType]}
                 >
-                  {signalTypes[idxType]}
+                  {signalTypeData[idxType]}
                 </td>
               )}
               <td
@@ -137,7 +153,9 @@ const SignalInterface = () => {
                 <a
                   id={`${unit.unitNo}-${idxType}-${signal.id}-vm`}
                   className={`type-${idxType} ${signal.status ? "on" : "off"}`}
-                  onClick={() => triggerSignal(unit.unitNo, signal.signal)}
+                  onClick={() =>
+                    triggerSignal.current(unit, signal, idxType, idxSignal)
+                  }
                 >
                   {signal.signal}
                 </a>

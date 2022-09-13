@@ -2,7 +2,7 @@
   height: 90%;
   overflow: auto;
   &__wrapper {
-    font-size: 1.2rem;
+    font-size: 2rem;
     overflow-y: auto;
     margin-left: 0.5rem;
     table {
@@ -14,7 +14,11 @@
         border: 1px solid black;
         white-space: nowrap;
       }
+      tbody tr td:first-child {
+        text-align: center;
+      }
       .body {
+        &__interval,
         &__stdtime {
           text-align: center;
           font-weight: 500;

@@ -1,0 +1,14 @@
+@import "table";
+@import "data";
+
+.human {
+  main {
+    display: flex;
+    flex-direction: row !important;
+  }
+  &__result {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+}

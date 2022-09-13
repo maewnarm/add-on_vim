@@ -1,41 +1,14 @@
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import { OperationContext } from "../operation/operation";
 
 export type IntervalTypes = {
   operation: string;
-  interval: string;
-  intervalNumber: number
+  interval: number;
   stdTime: number;
 };
 
-const demoIntervalData: IntervalTypes[] = [
-  {
-    operation: "Change Cutting Tool",
-    interval: "1 / 5 pcs.",
-    intervalNumber: 5,
-    stdTime: 180,
-  },
-  {
-    operation: "Cleaning",
-    interval: "1 / 10 pcs.",
-    intervalNumber: 10,
-    stdTime: 60,
-  },
-  {
-    operation: "Supply Material",
-    interval: "1 / 20 pcs.",
-    intervalNumber: 20,
-    stdTime: 240,
-  },
-];
-
 const TimeInterface = () => {
   const { intervalData, setIntervalData } = React.useContext(OperationContext);
-
-  useEffect(() => {
-    setIntervalData(demoIntervalData)
-  }, [])
-  
 
   return (
     <div className="time-interface custom-scrollbar">
@@ -43,6 +16,7 @@ const TimeInterface = () => {
         <table>
           <thead>
             <tr>
+              <th></th>
               <th>Operation</th>
               <th>Interval</th>
               <th>Standard time (s.)</th>
@@ -51,8 +25,9 @@ const TimeInterface = () => {
           <tbody>
             {intervalData.map((data, idx) => (
               <tr key={idx}>
+                <td>{idx + 1}</td>
                 <td className="body__operation">{data.operation}</td>
-                <td className="body__interval">{data.interval}</td>
+                <td className="body__interval">{`1 / ${data.interval} pcs.`}</td>
                 <td className="body__stdtime">{data.stdTime}</td>
               </tr>
             ))}

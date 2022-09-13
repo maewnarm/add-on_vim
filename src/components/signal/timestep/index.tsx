@@ -22,6 +22,10 @@ const demoData: StepChartDataTypes[] = [
   { signal: "signal02", time: 6, value: 0 },
 ];
 
+// TODO receive signal ON/OFF from machine in format array {index: number[],value: (0|1)[]}
+// TODO add timer function for set interval receive signal ON/OFF
+// TODO limit x-axis to 30 seconds
+
 const TimeStepline = () => {
   const [stepChart, setStepChart] = useState<Chart>();
   const [stepChartRaw, setStepChartRaw] =
@@ -35,7 +39,7 @@ const TimeStepline = () => {
       container: "stepline",
       autoFit: true,
       height: 200,
-      padding: [20,30,50,40]
+      padding: [20, 30, 50, 40],
     });
     setStepChart(c);
   };
@@ -47,6 +51,7 @@ const TimeStepline = () => {
     stepChart.scale("time", {
       range: [0, 1],
       nice: true,
+      max: 30,
     });
     stepChart.scale("value", {
       nice: true,
@@ -54,13 +59,13 @@ const TimeStepline = () => {
       formatter: (value) => (value % 2 ? "on" : "off"),
     });
     stepChart.legend({
-      padding: [10,10,0,10],
+      padding: [10, 10, 0, 10],
       itemName: {
         style: {
-          fontSize: 20
-        }
-      }
-    })
+          fontSize: 20,
+        },
+      },
+    });
     stepChart.line().position("time*value").shape("hv").color("signal");
     stepChart.render();
   };
@@ -72,11 +77,13 @@ const TimeStepline = () => {
     // offset value
     let offset: { [signal: string]: number } = {};
     signals.forEach((signal, idx) => (offset[signal] = idx));
-    console.log("offset : ",offset)
-    let chartData: StepChartDataTypes[] = JSON.parse(JSON.stringify(stepChartRaw));
+    console.log("offset : ", offset);
+    let chartData: StepChartDataTypes[] = JSON.parse(
+      JSON.stringify(stepChartRaw)
+    );
     chartData = chartData.map((data) => {
       data.value += 2 * offset[data.signal];
-      return data 
+      return data;
     });
     setStepChartData(chartData);
   };
