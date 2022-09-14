@@ -42,9 +42,7 @@ const Standardized: React.FC<StandardizedProps> = (props) => {
   const { tableData } = React.useContext(MotionContext);
   const [highlightRow, setHighlightRow] = useState(0);
   const [subCount, setSubCount] = useState(0);
-  const [targetCT, setTargetCT] = useState(
-    tableData[id]?.reduce((acc, data) => acc + data.HT, 0) || 0
-  );
+  const [targetCT, setTargetCT] = useState(0);
 
   const setHighlightPosition = (targetId: string) => {
     const rows = document.getElementsByClassName(`step-row-${id}`);
@@ -66,6 +64,16 @@ const Standardized: React.FC<StandardizedProps> = (props) => {
   function setSubCountFunction(value: number) {
     setSubCount(value);
   }
+
+  useEffect(() => {
+    console.log(tableData)
+    setTargetCT(
+      tableData[id]?.reduce((acc, data) => acc + data.HT, 0) || 0)
+  }, [tableData])
+
+  useEffect(() => {
+    console.log(targetCT)
+  },[targetCT])
 
   useEffect(() => {
     // if (highlightRow === 0) return;
@@ -93,29 +101,29 @@ const Standardized: React.FC<StandardizedProps> = (props) => {
             wipAddAt === "start"
               ? wipAddId
               : wipRemoveAt === "start"
-              ? wipRemoveId
-              : undefined
+                ? wipRemoveId
+                : undefined
           }
           startCounterIncrement={
             wipAddAt === "start"
               ? wipAddIncrement
               : wipRemoveAt === "start"
-              ? wipRemoveIncrement
-              : undefined
+                ? wipRemoveIncrement
+                : undefined
           }
           endCounterId={
             wipAddAt === "end"
               ? wipAddId
               : wipRemoveAt === "end"
-              ? wipRemoveId
-              : undefined
+                ? wipRemoveId
+                : undefined
           }
           endCounterIncrement={
             wipAddAt === "end"
               ? wipAddIncrement
               : wipRemoveAt === "end"
-              ? wipRemoveIncrement
-              : undefined
+                ? wipRemoveIncrement
+                : undefined
           }
           outputFunction={setWipFunction}
           trigOutputAfterStep={setWipAfterStep}

@@ -132,13 +132,7 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
   useEffect(() => {
     // setChartData(chartStdData);
 
-    // store time range value
-    setTimeRangeData(chartStdData.map((data) => data.value));
-    // delete time range value
-    let emptyChartData = [...chartStdData];
-    emptyChartData = emptyChartData.map((data) => ({ ...data, value: [0, 0] }));
-
-    setChartData(emptyChartData);
+    
 
     createChart();
   }, []);
@@ -148,6 +142,19 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
       addChartProps();
     }
   }, [chart]);
+
+  useEffect(() => {
+    // update chart props
+    addChartProps()
+
+    // store time range value
+    setTimeRangeData(chartStdData.map((data) => data.value));
+    // delete time range value
+    let emptyChartData = [...chartStdData];
+    emptyChartData = emptyChartData.map((data) => ({ ...data, value: [0, 0] }));
+    setChartData(emptyChartData);
+
+  },[targetSecond])
 
   useEffect(() => {
     if (!chart) return;
@@ -161,7 +168,6 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
     const mul = intervalTime_ms / 1000;
     let rangeIndex = 0;
     let subCountSecond = Math.round(subCount * mul * 10) / 10;
-
     if (subCountSecond === targetSecond) {
       return;
     }

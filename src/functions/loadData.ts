@@ -26,9 +26,9 @@ export const handleLoadProjectData = async (
       `Response 'loadProjectSignals' or 'loadCategories' was error.`
     );
     set({
-      project_id: 0,
-      project_name: "",
-      project_data: {},
+      projectId: 0,
+      projectName: "",
+      projectData: {},
       isLoading: false,
     });
     return;
@@ -76,9 +76,9 @@ export const handleLoadProjectData = async (
   console.log(projectData);
 
   set({
-    project_id: project_id,
-    project_name: project_name,
-    project_data: projectData,
+    projectId: project_id,
+    projectName: project_name,
+    projectData: projectData,
     isLoading: false,
   });
 };

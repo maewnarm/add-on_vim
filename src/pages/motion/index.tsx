@@ -268,7 +268,7 @@ const Motion = () => {
                     setWipFunction={setWipFunction}
                   />
                 </div>
-                <div className="motion__std__stdized__inner__element">
+                {/* <div className="motion__std__stdized__inner__element">
                   <Standardized
                     key={2}
                     id={2}
@@ -276,7 +276,7 @@ const Motion = () => {
                     timerState={timerState}
                     isLoop={isLoop}
                   />
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -297,12 +297,12 @@ const Motion = () => {
               >
                 <WIP id={0} amount={wip} style={{ top: "37%", left: -30 }} />
               </Video>
-              <Video
+              {/* <Video
                 id={2}
                 name={"OP1"}
                 src="/videos/OP1.mp4"
                 playbackRate={playbackRate}
-              ></Video>
+              ></Video> */}
               {/* TODO add video outline */}
             </div>
           </div>

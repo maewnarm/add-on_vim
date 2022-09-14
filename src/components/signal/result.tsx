@@ -24,10 +24,10 @@ type CTChartDataType = {
 };
 
 export const defaultMachineSignalContext = {
-  setCountFunction: (count: number) => {},
-  setPlanFunction: (plan: number) => {},
+  setCountFunction: (count: number) => { },
+  setPlanFunction: (plan: number) => { },
   actualAmount: 0,
-  setActualFunction: (plan: number) => {},
+  setActualFunction: (plan: number) => { },
 };
 
 export const MachineSignalContext = React.createContext(
@@ -65,9 +65,9 @@ const Result = () => {
   const [plan, setPlan] = useState(0);
   const [actual, setActual] = useState(0);
   const [amountColor, setAmountColor] = useState("blue");
-  const addActual = useRef(() => {});
+  const addActual = useRef(() => { });
   const addCtChartData = useRef(
-    (payload: { topic: string; message: any }) => {}
+    (payload: { topic: string; message: any }) => { }
   );
   const reRender = useMemo(
     () =>
@@ -417,10 +417,11 @@ const Result = () => {
   useEffect(() => {
     if (actual === 0) return;
 
-    // const currentTime = Date.now();
-    // const ct =
-    //   Math.round((Math.abs(lastCount.current - currentTime) / 1000) * 10) / 10;
-    // lastCount.current = currentTime;
+    const currentTime = Date.now();
+    const ct =
+      Math.round((Math.abs(lastCount.current - currentTime) / 1000) * 10) / 10;
+    addCtChartData.current({ topic: "", message: { ct: ct } })
+    lastCount.current = currentTime;
   }, [actual]);
 
   useEffect(() => {
