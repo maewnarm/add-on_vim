@@ -97,11 +97,11 @@ export const OperationContext = createContext<OperationContextType>({
   projectName: "",
   projectData: {},
   isLoading: false,
-  set: () => {},
+  set: () => { },
   signalTypeData: [],
   signalData: [],
   intervalData: [],
-  setIntervalData: () => {},
+  setIntervalData: () => { },
 });
 
 const Operation: React.FC<{ projectName: string }> = (props) => {
@@ -154,13 +154,17 @@ const Operation: React.FC<{ projectName: string }> = (props) => {
   return (
     <OperationContext.Provider value={context}>
       <div className="operation custom-scrollbar">
+        <div className="operation__result custom-scrollbar">
+          <p>Trial Result</p>
+          <Result />
+        </div>
         <div className="operation__interface">
           <Tabs className="operation__interface__setting">
-            <Tabs.TabPane tab="Signal Interface" key="signal">
+            {/* <Tabs.TabPane tab="Signal Interface" key="signal">
               <div className="operation__signal">
                 <SignalInterface />
               </div>
-            </Tabs.TabPane>
+            </Tabs.TabPane> */}
             <Tabs.TabPane tab="Time Interface" key="time">
               <div className="operation__time">
                 <TimeInterface />
@@ -170,15 +174,12 @@ const Operation: React.FC<{ projectName: string }> = (props) => {
           <Divider
             style={{ marginTop: 10, marginBottom: 0, borderTopColor: "gray" }}
           />
-          <div className="operation__interface__stepline">
+          {/* <div className="operation__interface__stepline">
             <p>Machine Signal Timeline</p>
             <TimeStepline />
-          </div>
+          </div> */}
         </div>
-        <div className="operation__result custom-scrollbar">
-          <p>Trial Result</p>
-          <Result />
-        </div>
+
       </div>
     </OperationContext.Provider>
   );

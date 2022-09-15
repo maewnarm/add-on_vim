@@ -286,13 +286,13 @@ const Motion = () => {
               <Video
                 id={1}
                 name={"OP1"}
-                src="/videos/OP1.mp4"
+                src="/videos/OP1-1.mp4"
                 playbackRate={playbackRate}
               ></Video>
               <Video
                 id={0}
                 name={"Add-on"}
-                src="/videos/Add-on.mp4"
+                src="/videos/addon-1.mp4"
                 playbackRate={playbackRate}
               >
                 <WIP id={0} amount={wip} style={{ top: "37%", left: -30 }} />
