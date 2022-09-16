@@ -20,7 +20,6 @@ const CanvasObject = () => {
   const [menuTarget, setMenuTarget] = useState<number>();
 
   useEffect(() => {
-    // console.log(objects, cycle);
     if (objects.length > 0) {
       setHighlightTarget({ [objects[cycle]?.object.name]: true });
       setMenuTarget(objects[cycle]?.object.name);

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { OperationContext } from "../signal/operation/operation";
+import { intervalCategory, OperationContext } from "../signal/operation/operation";
 import type { defaultMachineSignalContext } from "../signal/result";
 
 interface TimerUpProps {
@@ -65,7 +65,6 @@ const TimerCountdown: React.FC<TimerUpProps> = (props) => {
   }, [subCount]);
 
   useEffect(() => {
-    console.log("start", start);
     if (!start) return;
 
     if (timer) {
@@ -89,7 +88,6 @@ const TimerCountdown: React.FC<TimerUpProps> = (props) => {
   }, [start]);
 
   useEffect(() => {
-    console.log("pause", pause);
     if (!pause) return;
 
     clearTimer();
@@ -103,15 +101,15 @@ const TimerCountdown: React.FC<TimerUpProps> = (props) => {
   }, [stop]);
 
   useEffect(() => {
-    console.log("Actual amount : ", actualAmount);
     if (actualAmount === 0) return;
     // reduce when reach interval target
     let sumTime = 0;
-    intervalData.forEach((interval) => {
-      console.log(actualAmount, interval.interval, actualAmount % interval.interval);
-      if (actualAmount % interval.interval === 0) {
-        sumTime += interval.stdTime;
-      }
+    intervalCategory.forEach((_, idx) => {
+      intervalData[idx].forEach((interval) => {
+        if (actualAmount % interval.interval === 0) {
+          sumTime += interval.stdTime;
+        }
+      })
     });
     setSubCount(subCount - sumTime / mul);
   }, [actualAmount]);

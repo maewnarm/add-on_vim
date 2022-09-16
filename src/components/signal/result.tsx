@@ -1,13 +1,14 @@
 import {
   CloseCircleFilled,
+  DeleteFilled,
   PauseCircleFilled,
   PlayCircleFilled,
   PlusCircleFilled,
 } from "@ant-design/icons";
 import { Chart } from "@antv/g2";
 import { debounce } from "debounce";
-import { Button, InputNumber } from "antd";
-import React, { useEffect, useMemo, useState, useRef, useContext } from "react";
+import { Button, InputNumber, Switch } from "antd";
+import React, { useEffect, useMemo, useState, useRef, useContext, useCallback } from "react";
 import TimerCountdown from "../timer/timerCountdown";
 import { OperationContext } from "./operation/operation";
 import { MainContext } from "@/pages/_app";
@@ -46,6 +47,7 @@ const Result = () => {
   const [ctChart, setCtChart] = useState<Chart>();
   const [morChartData, setMorChartData] = useState<MORChartDataType[]>([]);
   const [ctChartData, setCtChartData] = useState<CTChartDataType[]>([]);
+  const [ctChartMaxY, setCtChartMaxY] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [ctSelected, setCtSelected] = useState(0);
   const [count, setCount] = useState(0);
@@ -55,13 +57,14 @@ const Result = () => {
   const [targetCt, setTargetCt] = useState(10);
   const [targetMOR, setTargetMOR] = useState(95);
   const [currentTime, setCurrentTime] = useState("");
-  const [play, setPlay] = useState(false);
+  const [start, setStart] = useState(false);
   const [pause, setPause] = useState(false);
   const [stop, setStop] = useState(false);
+  const [enableManual, setEnableManual] = useState(false)
   // result data
-  const [resultMOR, setResultMOR] = useState("-");
-  const [resultLoss, setResultLoss] = useState("-");
-  const [resultCt, setResultCt] = useState("-");
+  const [resultMOR, setResultMOR] = useState("0.0");
+  const [resultLoss, setResultLoss] = useState("0.0");
+  const [resultCt, setResultCt] = useState("0.0");
   const [plan, setPlan] = useState(0);
   const [actual, setActual] = useState(0);
   const [amountColor, setAmountColor] = useState("blue");
@@ -74,11 +77,16 @@ const Result = () => {
       debounce(() => {
         if (!ctChart) return;
 
+        // calculate max data
+        // const maxY = Math.max(targetCt, Math.max(...ctChartData.map((data) => data.ct)))
+        // if (maxY !== ctChartMaxY) {
         ctChart.clear();
         addCTChartProps();
         ctChart.render();
+        // setCtChartMaxY(maxY)
+        // }
       }, 1000),
-    [targetCt]
+    [ctChart, targetCt, ctChartData, ctChartMaxY]
   );
 
   const context = useMemo(
@@ -109,6 +117,7 @@ const Result = () => {
     morChart.data(morChartData);
     morChart.scale("value", {
       nice: true,
+      minLimit: 0,
       maxLimit: 100,
     });
     morChart.axis("value", {
@@ -204,13 +213,13 @@ const Result = () => {
     }
   };
 
-  const addCTChartProps = () => {
+  const addCTChartProps = useCallback(() => {
     if (!ctChart) return;
 
-    // ctChart.data(ctChartData);
     ctChart.scale({
       ct: {
         min: 0,
+        // maxLimit: ctChartMaxY,
         nice: true,
       },
       index: {
@@ -289,30 +298,38 @@ const Result = () => {
     // @ts-ignore
     ctChart.on("element:click", (ev) => {
       const { data } = ev.data;
-      // console.log("click");
-      // console.log(data.ct);
       setIsModalVisible(true);
       setCtSelected(data.ct);
     });
     ctChart.render();
-  };
+  }, [ctChart, targetCt, ctChartMaxY]);
 
   function startTimer() {
-    setPlay(true);
+    setStart(true);
     setPause(false);
     setStop(false);
   }
 
   function pauseTimer() {
-    setPlay(false);
+    setStart(false);
     setPause(true);
     setStop(false);
   }
 
   function stopTimer() {
-    setPlay(false);
+    setStart(false);
     setPause(false);
     setStop(true);
+  }
+
+  function Reset() {
+    setCtChartData([])
+    setMorChartData([])
+    setResultMOR("0.0")
+    setResultLoss("0.0")
+    setResultCt("0.0")
+    setActual(0)
+    setPlan(0)
   }
 
   const setAddActualFunction = useMemo(() => {
@@ -342,11 +359,12 @@ const Result = () => {
     mqttClient.on("message", (topic, message) => {
       const payload = { topic, message: JSON.parse(message.toString()) };
       const [, , , type, data] = topic.split("/");
-      console.log(type, data);
       if (type !== "result") return;
 
       if (data === "actual") {
-        console.log("result actual input");
+        // check is start
+        if (!start) return
+
         addActual.current();
         addCtChartData.current(payload);
       }
@@ -380,7 +398,7 @@ const Result = () => {
     // calculate average ct
     const avgCt =
       ctChartData.reduce((acc, { ct }) => acc + ct, 0) / ctChartData.length;
-    setResultCt(avgCt.toFixed(2));
+    setResultCt(isNaN(avgCt) ? "0.0" : avgCt.toFixed(2));
 
     ctChart.changeData(ctChartData);
   }, [ctChartData]);
@@ -390,10 +408,15 @@ const Result = () => {
   }, [targetCt]);
 
   useEffect(() => {
-    if (!play) return;
+    if (!start) return;
 
     lastCount.current = Date.now();
-  }, [play]);
+
+    // publish to reset ct in Datashare
+    if (!mqttClient) return
+    const message = new Date().toLocaleString()
+    mqttClient.publish(`${process.env.NEXT_PUBLIC_TOPIC_UUID}/${projectName}/to_mc/result/reset`, message)
+  }, [start]);
 
   useEffect(() => {
     // set current time format
@@ -418,6 +441,8 @@ const Result = () => {
     if (actual === 0) return;
 
     const currentTime = Date.now();
+    // add ctChartData when manual input
+    if (!enableManual) return
     const ct =
       Math.round((Math.abs(lastCount.current - currentTime) / 1000) * 10) / 10;
     addCtChartData.current({ topic: "", message: { ct: ct } })
@@ -469,7 +494,7 @@ const Result = () => {
                   addonAfter="hour"
                   value={targetHour}
                   onChange={(value) => setTargetHour(value)}
-                  disabled={play || pause}
+                  disabled={start || pause}
                   formatter={(value) => {
                     let val: number | undefined = value;
                     if (typeof val === "string") val = parseInt(val);
@@ -482,7 +507,7 @@ const Result = () => {
                   addonAfter="minute"
                   value={targetMinute}
                   onChange={(value) => setTargetMinute(value)}
-                  disabled={play || pause}
+                  disabled={start || pause}
                   formatter={(value) => {
                     let val: number | undefined = value;
                     if (typeof val === "string") val = parseInt(val);
@@ -499,7 +524,7 @@ const Result = () => {
                   value={targetMOR}
                   step={1}
                   onChange={(value) => setTargetCt(value)}
-                  disabled={play || pause}
+                  disabled={start || pause}
                 />
               </div>
               <p>CT target : </p>
@@ -509,12 +534,12 @@ const Result = () => {
                   value={targetCt}
                   step={0.1}
                   onChange={(value) => setTargetCt(value)}
-                  disabled={play || pause}
+                  disabled={start || pause}
                   formatter={(value) => {
                     let val: number | undefined = value;
-                    if (typeof val === "string") val = parseInt(val);
+                    if (typeof val === "string") val = Number(val);
                     return `${val?.toLocaleString("en-US", {
-                      minimumIntegerDigits: 2,
+                      minimumIntegerDigits: 1,
                       minimumFractionDigits: 1,
                     })}`;
                   }}
@@ -528,9 +553,10 @@ const Result = () => {
                 <div className="result__running__time__button">
                   <Button
                     shape="round"
-                    type={play ? "primary" : "default"}
+                    type={start ? "primary" : "default"}
                     icon={<PlayCircleFilled />}
                     onClick={() => startTimer()}
+                    disabled={projectName === ""}
                   >
                     start
                   </Button>
@@ -539,6 +565,7 @@ const Result = () => {
                     type={pause ? "primary" : "default"}
                     icon={<PauseCircleFilled />}
                     onClick={() => pauseTimer()}
+                    disabled={projectName === ""}
                   >
                     pause
                   </Button>
@@ -547,17 +574,34 @@ const Result = () => {
                     type={stop ? "primary" : "default"}
                     icon={<CloseCircleFilled />}
                     onClick={() => stopTimer()}
+                    disabled={projectName === ""}
                   >
                     stop
                   </Button>
                   <Button
                     shape="round"
                     type={"default"}
+                    icon={<DeleteFilled />}
+                    onClick={() => Reset()}
+                    disabled={projectName === ""}
+                  >
+                    reset
+                  </Button>
+                  <Button
+                    shape="round"
+                    type={"default"}
                     icon={<PlusCircleFilled />}
                     onClick={() => addActual.current()}
+                    disabled={!enableManual}
                   >
                     Add
                   </Button>
+                  <Switch
+                    checked={enableManual}
+                    checkedChildren="Manual"
+                    unCheckedChildren="Auto"
+                    onChange={() => setEnableManual(!enableManual)}
+                  />
                 </div>
                 <p>
                   Running time : <span>{currentTime}</span>
@@ -565,7 +609,7 @@ const Result = () => {
                 <TimerCountdown
                   context={MachineSignalContext}
                   intervalTime_ms={100}
-                  start={play}
+                  start={start}
                   pause={pause}
                   stop={stop}
                   targetHour={targetHour}

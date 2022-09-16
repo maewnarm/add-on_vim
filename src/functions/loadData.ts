@@ -73,7 +73,6 @@ export const handleLoadProjectData = async (
       ];
     })
   );
-  console.log(projectData);
 
   set({
     projectId: project_id,

@@ -137,7 +137,7 @@ const Video: React.FC<VideoProps> = (props) => {
               : "Waiting ..."}
           </span>
           <span>
-            {tableData[id] ? `[${tableData[id][step[id] - 1]?.HT} s.]` : ""}
+            {tableData[id] ? `[${tableData[id][step[id] - 1]?.HT || "-"} s.]` : ""}
           </span>
         </p>
       </div>

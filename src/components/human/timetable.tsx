@@ -70,7 +70,6 @@ const TimeTable: React.FC<TimeTableProps> = (props) => {
   }, [data]);
 
   useEffect(() => {
-    console.log("received trigger data:", triggerData);
     if (!isRecord) return;
 
     // calculate to set data in resultData array
@@ -79,7 +78,6 @@ const TimeTable: React.FC<TimeTableProps> = (props) => {
     const step = data.length;
     const { id, time } = triggerData;
     const ts = Date.parse(time);
-    console.log(id, time);
     if (id === 0) {
       // initial signal
       oldTime.current = ts;

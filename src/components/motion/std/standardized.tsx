@@ -66,14 +66,9 @@ const Standardized: React.FC<StandardizedProps> = (props) => {
   }
 
   useEffect(() => {
-    console.log(tableData)
     setTargetCT(
       tableData[id]?.reduce((acc, data) => acc + data.HT, 0) || 0)
   }, [tableData])
-
-  useEffect(() => {
-    console.log(targetCT)
-  },[targetCT])
 
   useEffect(() => {
     // if (highlightRow === 0) return;

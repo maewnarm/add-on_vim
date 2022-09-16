@@ -77,7 +77,6 @@ const TimeStepline = () => {
     // offset value
     let offset: { [signal: string]: number } = {};
     signals.forEach((signal, idx) => (offset[signal] = idx));
-    console.log("offset : ", offset);
     let chartData: StepChartDataTypes[] = JSON.parse(
       JSON.stringify(stepChartRaw)
     );

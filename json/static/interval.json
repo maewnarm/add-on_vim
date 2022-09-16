@@ -1,0 +1,13 @@
+{
+    "addon-stator-insu": [
+        [],
+        [
+            {
+                "operation": "Change Material",
+                "interval": 10,
+                "stdTime": 120
+            }
+        ],
+        []
+    ]
+}

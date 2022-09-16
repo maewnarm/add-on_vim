@@ -59,7 +59,6 @@ const SignalInterface = () => {
 
       if (type !== "signal") return;
 
-      console.log("on receiveSignal");
       console.table({
         project: project,
         unitName: unitName,

@@ -61,10 +61,7 @@ const Human = () => {
 
     mqttClient.on("message", (topic, message) => {
       const payload = { topic, message: JSON.parse(message.toString()) };
-      console.log(topic);
-      console.log(payload);
       const [, , type] = topic.split("/");
-      console.log(type);
       if (type !== "trigger") return;
 
       setTriggerData(payload.message);

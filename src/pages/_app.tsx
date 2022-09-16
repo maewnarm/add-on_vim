@@ -33,7 +33,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     if (!client) return;
 
     client.on("connect", () => {
-      console.log("MQTT Connected");
+      console.info("MQTT Connected");
     });
     client.on("error", (err) => {
       console.error("MQTT Connection error: ", err);

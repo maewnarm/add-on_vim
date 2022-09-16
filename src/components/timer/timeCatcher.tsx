@@ -186,11 +186,6 @@ const TimeCatcher: React.FC<TimeCatcherProps> = (props) => {
         typeof startCounterId !== "undefined" &&
         typeof startCounterIncrement !== "undefined"
       ) {
-        // console.log(
-        //   "set wip from start ",
-        //   startCounterId,
-        //   startCounterIncrement
-        // );
         outputFunction(startCounterId, startCounterIncrement);
 
         // set has work in process to TRUE
@@ -249,11 +244,6 @@ const TimeCatcher: React.FC<TimeCatcherProps> = (props) => {
           subStep === trigOutputAfterStep &&
           secStep === trigOutputAfterStepDelaySecond
         ) {
-          // console.log(
-          //   "set wip from trigger ",
-          //   endCounterId,
-          //   endCounterIncrement
-          // );
           outputFunction(endCounterId, endCounterIncrement);
         }
       }

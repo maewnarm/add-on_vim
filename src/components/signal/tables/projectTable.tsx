@@ -215,7 +215,6 @@ const ProjectTable: React.FC = () => {
   });
 
   const onFinish = async (values: any) => {
-    console.log(values);
     // create Project
     const body = {
       project_name: values.projectName,

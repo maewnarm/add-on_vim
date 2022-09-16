@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { OperationContext } from "../operation/operation";
+import { intervalCategory, OperationContext } from "../operation/operation";
 
 export type IntervalTypes = {
   operation: string;
@@ -7,10 +7,9 @@ export type IntervalTypes = {
   stdTime: number;
 };
 
-const category = ["Setup", "Part supply", "Quality"]
 
 const TimeInterface = () => {
-  const { intervalData, setIntervalData } = React.useContext(OperationContext);
+  const { intervalData } = React.useContext(OperationContext);
 
   return (
     <div className="time-interface custom-scrollbar">
@@ -19,17 +18,18 @@ const TimeInterface = () => {
           <thead>
             <tr>
               <th></th>
+              <th>Category</th>
               <th>Operation</th>
               <th>Interval</th>
               <th>Standard time (s.)</th>
             </tr>
           </thead>
           <tbody>
-            {category.map((cat, idx) => (
-
-              intervalData.map((data, idx) => (
-                <tr key={idx}>
-                  <td>{idx + 1}</td>
+            {intervalCategory.map((cat, idxCategory) => (
+              intervalData[idxCategory]?.map((data, idxData, arr) => (
+                <tr key={`${idxCategory}-${idxData}`}>
+                  <td>{idxData + 1}</td>
+                  <td rowSpan={arr.length}>{cat}</td>
                   <td className="body__operation">{data.operation}</td>
                   <td className="body__interval">{`1 / ${data.interval} pcs.`}</td>
                   <td className="body__stdtime">{data.stdTime}</td>

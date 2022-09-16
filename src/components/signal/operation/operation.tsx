@@ -32,8 +32,8 @@ type OperationContextType = ProjectDataContextType & {
   set: (proj: ProjectDataContextType) => void;
   signalTypeData: string[];
   signalData: OperateTableType[];
-  intervalData: IntervalTypes[];
-  setIntervalData: (data: IntervalTypes[]) => void;
+  intervalData: IntervalTypes[][];
+  setIntervalData: (data: IntervalTypes[][]) => void;
 };
 
 const signalTypes = ["MC condition", "Abnormal", "Setup"];
@@ -74,23 +74,8 @@ const signalTypes = ["MC condition", "Abnormal", "Setup"];
 //   },
 // ];
 
-const demoIntervalData: IntervalTypes[] = [
-  {
-    operation: "Change Cutting Tool",
-    interval: 20,
-    stdTime: 180,
-  },
-  {
-    operation: "Cleaning",
-    interval: 50,
-    stdTime: 60,
-  },
-  {
-    operation: "Supply Material",
-    interval: 80,
-    stdTime: 240,
-  },
-];
+export const intervalCategory = ["Setup", "Part supply", "Quality"]
+
 
 export const OperationContext = createContext<OperationContextType>({
   projectId: 0,
@@ -109,6 +94,7 @@ const Operation: React.FC<{ projectName: string }> = (props) => {
   const [signalData, setSignalData] = useState<{
     [project: string]: OperateTableType[];
   }>({});
+  const [intervalData, setIntervalData] = useState<{ [project: string]: IntervalTypes[][] }>({})
   const [context, setContext] = useState<OperationContextType>({
     projectId: 0,
     projectName: projectName,
@@ -117,7 +103,7 @@ const Operation: React.FC<{ projectName: string }> = (props) => {
     set: set,
     signalTypeData: signalTypes,
     signalData: [],
-    intervalData: demoIntervalData,
+    intervalData: [],
     setIntervalData: setIntervalDataFunction,
   });
 
@@ -125,8 +111,7 @@ const Operation: React.FC<{ projectName: string }> = (props) => {
     setContext({ ...context, ...proj });
   }
 
-  function setIntervalDataFunction(data: IntervalTypes[]) {
-    console.log("intervalData in operation : ", data);
+  function setIntervalDataFunction(data: IntervalTypes[][]) {
     setContext({ ...context, intervalData: data });
   }
 
@@ -139,16 +124,27 @@ const Operation: React.FC<{ projectName: string }> = (props) => {
     );
   };
 
+  const loadIntervalData = async () => {
+    await fetch(`/api/static/get?filePath=static_interval.json`).then(
+      async (res) => {
+        const data = JSON.parse(await res.json());
+        setIntervalData(data)
+      }
+    )
+  }
+
+  useEffect(() => {
+    loadSignalData();
+    loadIntervalData();
+  }, []);
+
   useEffect(() => {
     setContext({
       ...context,
       projectName: projectName,
       signalData: signalData[projectName] || [],
+      intervalData: intervalData[projectName] || []
     });
-  }, [projectName]);
-
-  useEffect(() => {
-    loadSignalData();
   }, [projectName]);
 
   return (

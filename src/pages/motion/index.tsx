@@ -162,10 +162,8 @@ const Motion = () => {
   }
 
   function setWipFunction(id: number, increment: number) {
-    // console.log("set wip", wip);
     const newWip = [...wip];
     newWip[id] += increment;
-    // console.log("newWip", newWip);
     setWip(newWip);
   }
 
@@ -176,10 +174,6 @@ const Motion = () => {
   useEffect(() => {
     loadTableData();
   }, [projectName]);
-
-  useEffect(() => {
-    console.log(tableData);
-  }, [tableData]);
 
   return (
     <MotionContext.Provider value={context}>

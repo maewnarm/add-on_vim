@@ -130,22 +130,29 @@
       }
     }
     button {
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       height: fit-content;
     }
     &__wrapper {
       display: flex;
       flex-direction: column;
-      width: fit-content;
+      width: 100%;
       margin-right: auto;
     }
     &__time {
       display: flex;
       flex-direction: column;
       font-weight: normal;
+      width: 100% !important;
       &__button {
         display: flex;
-        gap: 0.5rem;
+        align-items: center;
+        gap: 0.2rem;
+        width: 100%;
+        overflow-x: visible;
+        // .ant-switch {
+        //   width: fit-content;
+        // }
       }
     }
     &__mor {

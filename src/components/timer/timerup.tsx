@@ -43,7 +43,6 @@ const TimerUp: React.FC<TimerUpProps> = (props) => {
   }, [subCount]);
 
   useEffect(() => {
-    console.log("start");
     if (!start) return;
 
     if (timer) {
@@ -61,7 +60,6 @@ const TimerUp: React.FC<TimerUpProps> = (props) => {
   }, [start]);
 
   useEffect(() => {
-    console.log("pause");
     if (!pause) return;
 
     clearTimer();
