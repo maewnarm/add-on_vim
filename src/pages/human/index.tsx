@@ -1,10 +1,11 @@
-import HumanResultChart from "@/components/human/chart";
+import HumanResultChart from "@/components/human/resultchart";
 import ResultData from "@/components/human/data";
-import TimeTable from "@/components/human/timetable";
+import TimeTable from "@/components/human/table";
 import ProjectSelector from "@/components/selector/projects";
-import { TableDataType, TriggerDataType } from "@/types/motion";
+import { TableDataType, TriggerDataType } from "@/types/human";
 import React, { useContext, useState, useEffect, useMemo } from "react";
 import { MainContext } from "../_app";
+import HumanCtChart from "@/components/human/ctchart";
 
 export const HumanContext = React.createContext({
   tableData: [] as TableDataType[][],
@@ -99,10 +100,17 @@ const Human = () => {
           </div>
         </div>
         <main>
-          <TimeTable indexData={1} />
+          <div className="human__data">
+            <div className="human__data__table">
+              <TimeTable indexData={1} />
+            </div>
+            <div className="human__data__ctchart">
+              <HumanCtChart />
+            </div>
+          </div>
           <div className="human__result">
             <ResultData indexData={1} />
-            <HumanResultChart />
+            <HumanResultChart indexData={1} />
           </div>
         </main>
       </div>

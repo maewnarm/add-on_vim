@@ -1,0 +1,9 @@
+.human__result__chart {
+  height: 50%;
+  background-color: var(--color-4);
+  & > p:first-of-type {
+    font-weight: 600;
+    padding-left: 1rem;
+    margin: 0;
+  }
+}

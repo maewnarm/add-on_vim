@@ -40,6 +40,7 @@ const ProjectSelector: React.FC<SelectorProps> = (props) => {
           .toLowerCase()
           .localeCompare((optionB!.children as unknown as string).toLowerCase())
       }
+      popupClassName="project-selector__popup"
     >
       {projectList.map((project, idx) => (
         <Option key={idx} value={project.value}>

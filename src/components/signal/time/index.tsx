@@ -7,7 +7,6 @@ export type IntervalTypes = {
   stdTime: number;
 };
 
-
 const TimeInterface = () => {
   const { intervalData } = React.useContext(OperationContext);
 
@@ -21,21 +20,23 @@ const TimeInterface = () => {
               <th>Category</th>
               <th>Operation</th>
               <th>Interval</th>
-              <th>Standard time (s.)</th>
+              <th>Std. time (s.)</th>
             </tr>
           </thead>
           <tbody>
-            {intervalCategory.map((cat, idxCategory) => (
+            {intervalCategory.map((cat, idxCategory) =>
               intervalData[idxCategory]?.map((data, idxData, arr) => (
                 <tr key={`${idxCategory}-${idxData}`}>
                   <td>{idxData + 1}</td>
-                  <td rowSpan={arr.length}>{cat}</td>
+                  <td rowSpan={arr.length} className="body__category">
+                    {cat}
+                  </td>
                   <td className="body__operation">{data.operation}</td>
                   <td className="body__interval">{`1 / ${data.interval} pcs.`}</td>
                   <td className="body__stdtime">{data.stdTime}</td>
                 </tr>
               ))
-            ))}
+            )}
           </tbody>
         </table>
       </div>

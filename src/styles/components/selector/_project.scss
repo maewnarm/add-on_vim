@@ -1,0 +1,19 @@
+.project-selector {
+  &__popup {
+    width: fit-content !important;
+    max-width: 450px;
+    .ant-select {
+      &-item {
+        font-size: 1.5rem;
+        &-option {
+          line-height: 2rem;
+        }
+      }
+      .rc-virtual-list {
+        &-holder-content {
+          width: fit-content;
+        }
+      }
+    }
+  }
+}

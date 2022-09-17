@@ -1,58 +1,3 @@
-// .result {
-//   display: grid;
-//   grid-template-columns: 1fr 2fr 2fr 2fr;
-//   gap: 1.5rem;
-//   background-color: var(--color-2);
-//   height: fit-content;
-//   padding: 0.5rem 0;
-//   border: 2px solid var(--color-1);
-//   border-radius: 15px;
-//   & > div {
-//     display: flex;
-//     flex-direction: row;
-//     justify-content: space-around;
-//     margin: auto 0;
-//     border-left: 1px solid var(--color-4);
-//     &:last-child {
-//       margin-right: 1.5rem;
-//     }
-//     & > p {
-//       font-size: 3rem;
-//       font-weight: 600;
-//       letter-spacing: 0.5rem;
-//       text-align: left;
-//       align-self: center;
-//       padding-left: 1rem;
-//     }
-//     & > div {
-//       display: flex;
-//       flex-direction: row;
-//       justify-content: flex-end;
-//       align-items: flex-end;
-//       p {
-//         height: fit-content;
-//         &:first-child {
-//           background-color: var(--color-3);
-//           font-size: 3rem;
-//           font-weight: bold;
-//           padding: 0 0.5rem;
-//           margin-right: 0.5rem;
-//         }
-//       }
-//     }
-//   }
-//   p {
-//     text-align: center;
-//     margin: 0;
-//   }
-//   & > p {
-//     margin: auto 0;
-//     padding-left: 1rem;
-//     font-size: 3rem;
-//     text-decoration: underline;
-//   }
-// }
-
 .result {
   p {
     & > span {
@@ -139,21 +84,31 @@
       width: 100%;
       margin-right: auto;
     }
+    &__button {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100% !important;
+      white-space: wrap;
+      &.operate {
+        margin-bottom: 0.5rem;
+      }
+      .ant-switch {
+        &-handle {
+          top: 5px;
+        }
+        &-inner {
+          font-size: 1.2rem;
+          padding: 0.2rem 0;
+        }
+      }
+    }
     &__time {
       display: flex;
       flex-direction: column;
       font-weight: normal;
       width: 100% !important;
-      &__button {
-        display: flex;
-        align-items: center;
-        gap: 0.2rem;
-        width: 100%;
-        overflow-x: visible;
-        // .ant-switch {
-        //   width: fit-content;
-        // }
-      }
     }
     &__mor {
       &__value {

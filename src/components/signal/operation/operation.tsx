@@ -3,7 +3,7 @@ import { MachineSignalType } from "@/types/setting";
 import React, { useState, useEffect } from "react";
 import { createContext } from "react";
 import SignalInterface from "../signal";
-import Result from "../result";
+import Result from "../result/index";
 import { SettingTable } from "../tables/settingTable";
 import TimeInterface, { IntervalTypes } from "../time";
 import CanvasObject from "./canvas";

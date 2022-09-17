@@ -23,6 +23,8 @@
     flex-direction: column;
     gap: 1rem;
     height: 75vh;
+    width: 100%;
+    overflow: auto;
     &__setting {
       height: 60%;
     }
@@ -33,7 +35,7 @@
         }
       }
       &-content-holder {
-        overflow: scroll;
+        // overflow: scroll;
         &::-webkit-scrollbar {
           width: 10px;
           height: 10px;

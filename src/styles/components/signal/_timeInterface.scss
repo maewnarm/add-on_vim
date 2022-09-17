@@ -2,6 +2,7 @@
   height: 90%;
   overflow: auto;
   &__wrapper {
+    width: fit-content;
     font-size: 2rem;
     overflow-y: auto;
     margin-left: 0.5rem;
@@ -14,10 +15,30 @@
         border: 1px solid black;
         white-space: nowrap;
       }
-      tbody tr td:first-child {
-        text-align: center;
+      tbody tr td {
+        &:first-child {
+          text-align: center;
+          min-width: 60px;
+        }
       }
       .body {
+        &__category {
+          min-width: 200px;
+          max-width: 200px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        &__operation {
+          min-width: 300px;
+          max-width: 300px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        &__interval {
+          width: 200px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
         &__interval,
         &__stdtime {
           text-align: center;

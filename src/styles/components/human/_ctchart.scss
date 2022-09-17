@@ -1,0 +1,11 @@
+.human__ctchart {
+  height: 100%;
+  background-color: var(--color-3);
+  & > p {
+    font-weight: 600;
+    padding-left: 1rem;
+    margin: 0;
+  }
+  &__wrapper {
+  }
+}

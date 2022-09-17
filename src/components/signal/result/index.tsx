@@ -8,9 +8,16 @@ import {
 import { Chart } from "@antv/g2";
 import { debounce } from "debounce";
 import { Button, InputNumber, Switch } from "antd";
-import React, { useEffect, useMemo, useState, useRef, useContext, useCallback } from "react";
-import TimerCountdown from "../timer/timerCountdown";
-import { OperationContext } from "./operation/operation";
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+  useContext,
+  useCallback,
+} from "react";
+import TimerCountdown from "../../timer/timerCountdown";
+import { OperationContext } from "../operation/operation";
 import { MainContext } from "@/pages/_app";
 
 type MORChartDataType = {
@@ -25,10 +32,10 @@ type CTChartDataType = {
 };
 
 export const defaultMachineSignalContext = {
-  setCountFunction: (count: number) => { },
-  setPlanFunction: (plan: number) => { },
+  setCountFunction: (count: number) => {},
+  setPlanFunction: (plan: number) => {},
   actualAmount: 0,
-  setActualFunction: (plan: number) => { },
+  setActualFunction: (plan: number) => {},
 };
 
 export const MachineSignalContext = React.createContext(
@@ -60,7 +67,7 @@ const Result = () => {
   const [start, setStart] = useState(false);
   const [pause, setPause] = useState(false);
   const [stop, setStop] = useState(false);
-  const [enableManual, setEnableManual] = useState(false)
+  const [enableManual, setEnableManual] = useState(false);
   // result data
   const [resultMOR, setResultMOR] = useState("0.0");
   const [resultLoss, setResultLoss] = useState("0.0");
@@ -68,9 +75,9 @@ const Result = () => {
   const [plan, setPlan] = useState(0);
   const [actual, setActual] = useState(0);
   const [amountColor, setAmountColor] = useState("blue");
-  const addActual = useRef(() => { });
+  const addActual = useRef(() => {});
   const addCtChartData = useRef(
-    (payload: { topic: string; message: any }) => { }
+    (payload: { topic: string; message: any }) => {}
   );
   const reRender = useMemo(
     () =>
@@ -323,13 +330,13 @@ const Result = () => {
   }
 
   function Reset() {
-    setCtChartData([])
-    setMorChartData([])
-    setResultMOR("0.0")
-    setResultLoss("0.0")
-    setResultCt("0.0")
-    setActual(0)
-    setPlan(0)
+    setCtChartData([]);
+    setMorChartData([]);
+    setResultMOR("0.0");
+    setResultLoss("0.0");
+    setResultCt("0.0");
+    setActual(0);
+    setPlan(0);
   }
 
   const setAddActualFunction = useMemo(() => {
@@ -363,7 +370,7 @@ const Result = () => {
 
       if (data === "actual") {
         // check is start
-        if (!start) return
+        if (!start) return;
 
         addActual.current();
         addCtChartData.current(payload);
@@ -413,9 +420,12 @@ const Result = () => {
     lastCount.current = Date.now();
 
     // publish to reset ct in Datashare
-    if (!mqttClient) return
-    const message = new Date().toLocaleString()
-    mqttClient.publish(`${process.env.NEXT_PUBLIC_TOPIC_UUID}/${projectName}/to_mc/result/reset`, message)
+    if (!mqttClient) return;
+    const message = new Date().toLocaleString();
+    mqttClient.publish(
+      `${process.env.NEXT_PUBLIC_TOPIC_UUID}/${projectName}/to_mc/result/reset`,
+      message
+    );
   }, [start]);
 
   useEffect(() => {
@@ -442,10 +452,10 @@ const Result = () => {
 
     const currentTime = Date.now();
     // add ctChartData when manual input
-    if (!enableManual) return
+    if (!enableManual) return;
     const ct =
       Math.round((Math.abs(lastCount.current - currentTime) / 1000) * 10) / 10;
-    addCtChartData.current({ topic: "", message: { ct: ct } })
+    addCtChartData.current({ topic: "", message: { ct: ct } });
     lastCount.current = currentTime;
   }, [actual]);
 
@@ -549,60 +559,62 @@ const Result = () => {
           </div>
           <div className="result__running">
             <div className="result__running__wrapper">
+              <div className="result__running__button operate">
+                <Button
+                  shape="round"
+                  type={start ? "primary" : "default"}
+                  icon={<PlayCircleFilled />}
+                  onClick={() => startTimer()}
+                  disabled={projectName === ""}
+                >
+                  start
+                </Button>
+                <Button
+                  shape="round"
+                  type={pause ? "primary" : "default"}
+                  icon={<PauseCircleFilled />}
+                  onClick={() => pauseTimer()}
+                  disabled={projectName === ""}
+                >
+                  pause
+                </Button>
+                <Button
+                  shape="round"
+                  type={stop ? "primary" : "default"}
+                  icon={<CloseCircleFilled />}
+                  onClick={() => stopTimer()}
+                  disabled={projectName === ""}
+                >
+                  stop
+                </Button>
+                <Button
+                  shape="round"
+                  type={"default"}
+                  icon={<DeleteFilled />}
+                  onClick={() => Reset()}
+                  disabled={projectName === ""}
+                >
+                  reset
+                </Button>
+              </div>
+              <div className="result__running__button">
+                <Switch
+                  checked={enableManual}
+                  checkedChildren="Manual"
+                  unCheckedChildren="Auto"
+                  onChange={() => setEnableManual(!enableManual)}
+                />
+                <Button
+                  shape="round"
+                  type={"default"}
+                  icon={<PlusCircleFilled />}
+                  onClick={() => addActual.current()}
+                  disabled={!enableManual}
+                >
+                  Add
+                </Button>
+              </div>
               <div className="result__running__time">
-                <div className="result__running__time__button">
-                  <Button
-                    shape="round"
-                    type={start ? "primary" : "default"}
-                    icon={<PlayCircleFilled />}
-                    onClick={() => startTimer()}
-                    disabled={projectName === ""}
-                  >
-                    start
-                  </Button>
-                  <Button
-                    shape="round"
-                    type={pause ? "primary" : "default"}
-                    icon={<PauseCircleFilled />}
-                    onClick={() => pauseTimer()}
-                    disabled={projectName === ""}
-                  >
-                    pause
-                  </Button>
-                  <Button
-                    shape="round"
-                    type={stop ? "primary" : "default"}
-                    icon={<CloseCircleFilled />}
-                    onClick={() => stopTimer()}
-                    disabled={projectName === ""}
-                  >
-                    stop
-                  </Button>
-                  <Button
-                    shape="round"
-                    type={"default"}
-                    icon={<DeleteFilled />}
-                    onClick={() => Reset()}
-                    disabled={projectName === ""}
-                  >
-                    reset
-                  </Button>
-                  <Button
-                    shape="round"
-                    type={"default"}
-                    icon={<PlusCircleFilled />}
-                    onClick={() => addActual.current()}
-                    disabled={!enableManual}
-                  >
-                    Add
-                  </Button>
-                  <Switch
-                    checked={enableManual}
-                    checkedChildren="Manual"
-                    unCheckedChildren="Auto"
-                    onChange={() => setEnableManual(!enableManual)}
-                  />
-                </div>
                 <p>
                   Running time : <span>{currentTime}</span>
                 </p>

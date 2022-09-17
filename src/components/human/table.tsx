@@ -1,5 +1,5 @@
 import { HumanContext } from "@/pages/human";
-import { TableDataType } from "@/types/motion";
+import { TableDataType } from "@/types/human";
 import { Button, Popconfirm } from "antd";
 import React, { useContext, useEffect, useState, useRef } from "react";
 
@@ -21,6 +21,7 @@ const TimeTable: React.FC<TimeTableProps> = (props) => {
   const [isRecord, setIsRecord] = useState(false);
   const trialIndex = useRef(0);
   const oldTime = useRef(0);
+  const manualIndex = useRef(1);
 
   const clearResultData = () => {
     if (tableData.length === 0) return;
@@ -28,10 +29,13 @@ const TimeTable: React.FC<TimeTableProps> = (props) => {
     const len = data.length;
     const emptyArray: number[][] = Array(5).fill(Array(len).fill(0));
     setResultData(emptyArray);
+    trialIndex.current = 0;
+
+    manualIndex.current = 1;
   };
 
   function trialResultTd(stepIndex: number) {
-    console.log(overIndex,underIndex)
+    // console.log(overIndex, underIndex);
     return resultData.map((res, trialIndex) => {
       let style: React.CSSProperties = {};
       // if (trialIndex === overIndex[0] - 1 && stepIndex === overIndex[1] - 1) {
@@ -42,6 +46,12 @@ const TimeTable: React.FC<TimeTableProps> = (props) => {
       // ) {
       //   style = { backgroundColor: "yellow" };
       // }
+
+      if (data[stepIndex].HT < res[stepIndex]) {
+        style = { backgroundColor: "#FA7070" };
+      } else if (data[stepIndex].HT > res[stepIndex]) {
+        style = { backgroundColor: "#C3FF99" };
+      }
 
       return (
         <td key={`${trialIndex}-${stepIndex}`} className="result" style={style}>
@@ -70,10 +80,10 @@ const TimeTable: React.FC<TimeTableProps> = (props) => {
   }, [data]);
 
   useEffect(() => {
-    if (!isRecord) return;
-
     // calculate to set data in resultData array
+    if (!isRecord) return;
     if (!triggerData) return;
+    if (trialIndex.current == 5) return;
 
     const step = data.length;
     const { id, time } = triggerData;
@@ -96,27 +106,60 @@ const TimeTable: React.FC<TimeTableProps> = (props) => {
     }
   }, [triggerData]);
 
+  const manualAddresult = () => {
+    if (trialIndex.current == 5) return;
+
+    const step = data.length;
+
+    const val = Math.floor(Math.random() * 35) / 10;
+    let result = JSON.parse(JSON.stringify(resultData));
+    result[trialIndex.current][manualIndex.current - 1] = val;
+    setResultData(result);
+
+    if (manualIndex.current === step) {
+      trialIndex.current += 1;
+      manualIndex.current = 1;
+    } else {
+      manualIndex.current += 1;
+    }
+  };
+
   return (
-    <div className="human__timetable">
-      <div className="human__timetable__button">
-        <Button
-          type={isRecord ? "primary" : "default"}
-          shape="round"
-          onClick={() => setIsRecord(!isRecord)}
-          disabled={data.length === 0}
-        >
-          {isRecord ? "Recording" : "Not record"}
-        </Button>
-        <Popconfirm
-          title="Are you sure ?"
-          onConfirm={clearResultData}
-          okText="Yes"
-          cancelText="Cancel"
-        >
-          <Button type="ghost" danger shape="round">
-            Reset
+    <div className="human__timetable custom-scrollbar">
+      <div className="human__timetable__header">
+        <div className="human__timetable__button">
+          <Button
+            type={isRecord ? "primary" : "default"}
+            shape="round"
+            onClick={() => setIsRecord(!isRecord)}
+            disabled={data.length === 0}
+          >
+            {isRecord ? "Recording" : "Not record"}
           </Button>
-        </Popconfirm>
+          <Popconfirm
+            title="Are you sure ?"
+            onConfirm={clearResultData}
+            okText="Yes"
+            cancelText="Cancel"
+          >
+            <Button type="ghost" danger shape="round">
+              Reset
+            </Button>
+          </Popconfirm>
+          <Button onClick={() => manualAddresult()}>Add</Button>
+        </div>
+        <div className="human__timetable__guide">
+          <div
+            className="human__timetable__guide__marker"
+            style={{ backgroundColor: "#FA7070" }}
+          ></div>
+          <span>Over std.</span>
+          <div
+            className="human__timetable__guide__marker"
+            style={{ backgroundColor: "#C3FF99" }}
+          ></div>
+          <span>Under std.</span>
+        </div>
       </div>
       <table>
         <thead>
