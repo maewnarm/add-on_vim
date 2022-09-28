@@ -68,10 +68,10 @@ const Human = () => {
       setTriggerData(payload.message);
     });
     mqttClient.subscribe(
-      `${process.env.NEXT_PUBLIC_TOPIC_UUID}/${projectName}/trigger`
+      `${process.env.NEXT_PUBLIC_MQTT_TOPIC_UUID}/${projectName}/trigger`
     );
     console.info(
-      `MQTT subscribing : ${process.env.NEXT_PUBLIC_TOPIC_UUID}/${projectName}/trigger`
+      `MQTT subscribing : ${process.env.NEXT_PUBLIC_MQTT_TOPIC_UUID}/${projectName}/trigger`
     );
   }, [mqttClient, projectName]);
 

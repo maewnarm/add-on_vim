@@ -2,7 +2,7 @@ import Standardized from "@/components/motion/std/standardized";
 import Video from "@/components/motion/std/video";
 import WIP from "@/components/motion/std/wip";
 import ProjectSelector from "@/components/selector/projects";
-import TimerUp from "@/components/timer/timerup";
+import TimerUp from "@/components/timer/timerUp";
 import { TableDataType } from "@/types/human";
 import {
   CloseCircleFilled,
@@ -179,10 +179,10 @@ const Motion = () => {
     <MotionContext.Provider value={context}>
       <div className="main motion">
         <div className="sub-header sub-header-1">
-          <span>{"Lean Cardboard   +   e-Motion"}</span>
+          <span>{"Add-on Simulator"}</span>
         </div>
         <div className="sub-header sub-header-2">
-          <span>{"(Human + Karakuri + Automation)"}</span>
+          <span>{""}</span>
         </div>
         <div className="motion__operation">
           <div className="signal__project">
@@ -289,7 +289,7 @@ const Motion = () => {
                 src="/videos/addon-1.mp4"
                 playbackRate={playbackRate}
               >
-                <WIP id={0} amount={wip} style={{ top: "37%", left: -30 }} />
+                <WIP id={0} amount={wip} style={{ top: "60%", left: -50 }} />
               </Video>
               {/* <Video
                 id={2}

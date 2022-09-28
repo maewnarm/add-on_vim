@@ -1,6 +1,6 @@
 import mqtt from "mqtt";
 export const MQTTConnection = (host: string, port: number) => {
-  console.info("start MQTT Connection");
+  console.info("start MQTT Connection to host: ", host, ", port: ", port);
   const url = `ws://${host}:${port}/mqtt`;
   const options: mqtt.IClientOptions = {
     host: host,

@@ -26,7 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 
   useEffect(() => {
-    setClient(MQTTConnection("broker.emqx.io", 8083));
+    setClient(MQTTConnection(process.env.NEXT_PUBLIC_MQTT_HOST || "broker.emqx.io", Number(process.env.NEXT_PUBLIC_MQTT_PORT) || 8083));
   }, []);
 
   useEffect(() => {

@@ -39,13 +39,13 @@ const SignalInterface = () => {
       });
 
       // console.table({
-      //   topic: process.env.NEXT_PUBLIC_TOPIC_UUID,
+      //   topic: process.env.NEXT_PUBLIC_MQTT_TOPIC_UUID,
       //   unit: unit.unitName,
       //   signal: signal.signal,
       //   data: data,
       // });
       mqttClient.publish(
-        `${process.env.NEXT_PUBLIC_TOPIC_UUID}/${projectName}/to_mc/${unit.unitName}/${signal.address}/${idxType}/${idxSignal}`,
+        `${process.env.NEXT_PUBLIC_MQTT_TOPIC_UUID}/${projectName}/to_mc/${unit.unitName}/${signal.address}/${idxType}/${idxSignal}`,
         data
       );
     };
@@ -104,7 +104,7 @@ const SignalInterface = () => {
     if (!mqttClient) return;
 
     mqttClient.subscribe(
-      `${process.env.NEXT_PUBLIC_TOPIC_UUID}/${projectName}/from_mc/signal/#`
+      `${process.env.NEXT_PUBLIC_MQTT_TOPIC_UUID}/${projectName}/from_mc/signal/#`
     );
   }, [mqttClient, projectName]);
 

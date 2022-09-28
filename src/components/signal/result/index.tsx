@@ -32,10 +32,10 @@ type CTChartDataType = {
 };
 
 export const defaultMachineSignalContext = {
-  setCountFunction: (count: number) => {},
-  setPlanFunction: (plan: number) => {},
+  setCountFunction: (count: number) => { },
+  setPlanFunction: (plan: number) => { },
   actualAmount: 0,
-  setActualFunction: (plan: number) => {},
+  setActualFunction: (plan: number) => { },
 };
 
 export const MachineSignalContext = React.createContext(
@@ -75,9 +75,9 @@ const Result = () => {
   const [plan, setPlan] = useState(0);
   const [actual, setActual] = useState(0);
   const [amountColor, setAmountColor] = useState("blue");
-  const addActual = useRef(() => {});
+  const addActual = useRef(() => { });
   const addCtChartData = useRef(
-    (payload: { topic: string; message: any }) => {}
+    (payload: { topic: string; message: any }) => { }
   );
   const reRender = useMemo(
     () =>
@@ -308,6 +308,8 @@ const Result = () => {
       setIsModalVisible(true);
       setCtSelected(data.ct);
     });
+    ctChart.interaction('view-zoom')
+    ctChart.interaction('drag-move')
     ctChart.render();
   }, [ctChart, targetCt, ctChartMaxY]);
 
@@ -340,11 +342,19 @@ const Result = () => {
   }
 
   const setAddActualFunction = useMemo(() => {
-    addActual.current = () => setActual(actual + 1);
-  }, [actual]);
+    addActual.current = () => {
+      // check is start
+      if (!start) return;
+
+      setActual(actual + 1)
+    };
+  }, [actual, start]);
 
   const setAddCtChartDataFunction = useMemo(() => {
     addCtChartData.current = (payload: { topic: string; message: any }) => {
+      // check start
+      if (!start) return
+
       // set ct chart data
       const currentData = [...ctChartData];
       currentData.push({
@@ -353,7 +363,7 @@ const Result = () => {
       });
       setCtChartData(currentData);
     };
-  }, [ctChartData]);
+  }, [ctChartData, start]);
 
   useEffect(() => {
     createMORChart();
@@ -369,16 +379,15 @@ const Result = () => {
       if (type !== "result") return;
 
       if (data === "actual") {
-        // check is start
-        if (!start) return;
 
         addActual.current();
         addCtChartData.current(payload);
       }
     });
     mqttClient.subscribe(
-      `${process.env.NEXT_PUBLIC_TOPIC_UUID}/${projectName}/from_mc/result/actual`
+      `${process.env.NEXT_PUBLIC_MQTT_TOPIC_UUID}/${projectName}/from_mc/result/actual`
     );
+    console.log("subscribe topic:", `${process.env.NEXT_PUBLIC_MQTT_TOPIC_UUID}/${projectName}/from_mc/result/actual`)
   }, [mqttClient, projectName]);
 
   useEffect(() => {
@@ -423,7 +432,7 @@ const Result = () => {
     if (!mqttClient) return;
     const message = new Date().toLocaleString();
     mqttClient.publish(
-      `${process.env.NEXT_PUBLIC_TOPIC_UUID}/${projectName}/to_mc/result/reset`,
+      `${process.env.NEXT_PUBLIC_MQTT_TOPIC_UUID}/${projectName}/to_mc/result/reset`,
       message
     );
   }, [start]);
@@ -469,7 +478,7 @@ const Result = () => {
     } else {
       mor = (actual / plan) * 100;
     }
-    let loss = plan === 0 ? 0 : 100 - mor;
+    let loss = plan === 0 ? 0 : mor > 100 ? 0 : 100 - mor;
     mor = Math.round(mor * 10) / 10;
     loss = Math.round(loss * 10) / 10;
     setResultMOR(mor.toFixed(1));
@@ -503,7 +512,7 @@ const Result = () => {
                 <InputNumber
                   addonAfter="hour"
                   value={targetHour}
-                  onChange={(value) => setTargetHour(value)}
+                  onChange={(value) => setTargetHour(value || 0)}
                   disabled={start || pause}
                   formatter={(value) => {
                     let val: number | undefined = value;
@@ -516,7 +525,7 @@ const Result = () => {
                 <InputNumber
                   addonAfter="minute"
                   value={targetMinute}
-                  onChange={(value) => setTargetMinute(value)}
+                  onChange={(value) => setTargetMinute(value || 0)}
                   disabled={start || pause}
                   formatter={(value) => {
                     let val: number | undefined = value;
@@ -533,7 +542,7 @@ const Result = () => {
                   addonAfter="%"
                   value={targetMOR}
                   step={1}
-                  onChange={(value) => setTargetCt(value)}
+                  onChange={(value) => setTargetCt(value || 0)}
                   disabled={start || pause}
                 />
               </div>
@@ -543,7 +552,7 @@ const Result = () => {
                   addonAfter="sec"
                   value={targetCt}
                   step={0.1}
-                  onChange={(value) => setTargetCt(value)}
+                  onChange={(value) => setTargetCt(value || 0)}
                   disabled={start || pause}
                   formatter={(value) => {
                     let val: number | undefined = value;
