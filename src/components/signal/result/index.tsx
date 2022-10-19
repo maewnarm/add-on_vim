@@ -542,7 +542,7 @@ const Result = () => {
                   addonAfter="%"
                   value={targetMOR}
                   step={1}
-                  onChange={(value) => setTargetCt(value || 0)}
+                  onChange={(value) => setTargetMOR(value || 0)}
                   disabled={start || pause}
                 />
               </div>

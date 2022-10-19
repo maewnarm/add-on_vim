@@ -4,8 +4,8 @@
         [
             {
                 "operation": "Change Material",
-                "interval": 300,
-                "stdTime": 120
+                "interval": 150,
+                "stdTime": 60
             }
         ],
         []
