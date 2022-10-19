@@ -40,6 +40,7 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
       } as ChartDataType,
     ];
   }, [] as ChartDataType[]) || [];
+
   const createChart = () => {
     if (!chart) {
       const c = new Chart({
@@ -112,7 +113,7 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
       })
       .scale("name", {
         nice: true,
-        tickCount: 20,
+        // tickCount: 20,
       })
       .scale("value", {
         nice: true,
@@ -158,7 +159,7 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
 
   useEffect(() => {
     if (!chart) return;
-    
+
     chart.changeData(chartData);
   }, [chartData]);
 
@@ -194,7 +195,7 @@ const StdTimechart: React.FC<StdTimechartProps> = (props) => {
     ];
 
     if (!chart) return;
-
+    console.log(data)
     chart.changeData(data);
   }, [subCount]);
 

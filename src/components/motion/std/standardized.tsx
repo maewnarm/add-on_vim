@@ -9,6 +9,7 @@ interface StandardizedProps {
   id: number;
   name: string;
   timerState: boolean[];
+  disableVideo: boolean;
   isLoop: boolean;
   referencedWipCount?: number;
   wipAddAt?: "start" | "end";
@@ -27,6 +28,7 @@ const Standardized: React.FC<StandardizedProps> = (props) => {
     id,
     name,
     timerState,
+    disableVideo,
     isLoop,
     referencedWipCount,
     wipAddAt,
@@ -39,6 +41,7 @@ const Standardized: React.FC<StandardizedProps> = (props) => {
     setWipAfterStep,
     setWipAfterStepDelaySecond,
   } = props;
+  // console.log(props)
   const { tableData } = React.useContext(MotionContext);
   const [highlightRow, setHighlightRow] = useState(0);
   const [subCount, setSubCount] = useState(0);
@@ -84,6 +87,7 @@ const Standardized: React.FC<StandardizedProps> = (props) => {
           key={id}
           id={id}
           intervalTime_ms={100}
+          disableVideo={disableVideo}
           start={timerState[0]}
           pause={timerState[1]}
           stop={timerState[2]}

@@ -4,6 +4,7 @@ import WIP from "@/components/motion/std/wip";
 import ProjectSelector from "@/components/selector/projects";
 import TimerUp from "@/components/timer/timerUp";
 import { TableDataType } from "@/types/human";
+import { SetupDataType } from "@/types/motion";
 import {
   CloseCircleFilled,
   LeftOutlined,
@@ -13,8 +14,6 @@ import {
 import { Button, Select, Switch } from "antd";
 import React, { useMemo, useState, useEffect, useContext } from "react";
 import { useRef } from "react";
-
-// TODO render video focus outline operation
 
 const defaultMotionContext = {
   tableData: [] as TableDataType[][],
@@ -43,6 +42,9 @@ const Motion = () => {
   const [count, setCount] = useState(0);
   const [step, setStep] = useState<number[]>([0, 0]);
   const [tableData, setTableData] = useState<TableDataType[][]>([]);
+  const [setupData, setSetupData] = useState<SetupDataType>(
+    {} as SetupDataType
+  );
   // const [stepCount, setStepCount] = useState<number[]>([0, 0]);
   // timerState = [play,pause,stop,end]
   const [timerState, setTimerState] = useState<boolean[]>([
@@ -85,6 +87,15 @@ const Motion = () => {
       async (res) => {
         const data = JSON.parse(await res.json());
         setTableData(data[projectName] || []);
+      }
+    );
+  };
+
+  const loadSetupData = async () => {
+    await fetch(`/api/static/get?filePath=static_setup.json`).then(
+      async (res) => {
+        const data = JSON.parse(await res.json());
+        setSetupData(data[projectName] || []);
       }
     );
   };
@@ -173,6 +184,7 @@ const Motion = () => {
 
   useEffect(() => {
     loadTableData();
+    loadSetupData();
   }, [projectName]);
 
   return (
@@ -233,7 +245,39 @@ const Motion = () => {
             <div className="motion__std__stdized">
               <p>Standardized</p>
               <div className="motion__std__stdized__inner">
-                <div className="motion__std__stdized__inner__element">
+                {setupData["std"] &&
+                  setupData["std"].map((std, idx) => (
+                    <div
+                      key={idx}
+                      className="motion__std__stdized__inner__element"
+                    >
+                      <Standardized
+                        key={std.key}
+                        id={std.id}
+                        name={std.name}
+                        timerState={timerState}
+                        disableVideo={std.disableVideo}
+                        isLoop={isLoop}
+                        wipAddAt={std.wipAddAt}
+                        wipAddId={std.wipAddId}
+                        wipAddIncrement={std.wipAddIncrement}
+                        setWipFunction={setWipFunction}
+                        setWipAfterStep={std.setWipAfterStep}
+                        setWipAfterStepDelaySecond={
+                          std.setWipAfterStepDelaySecond
+                        }
+                        referencedWipCount={
+                          std.referencedWipCount !== undefined
+                            ? wip[std.referencedWipCount]
+                            : undefined
+                        }
+                        wipRemoveAt={std.wipRemoveAt}
+                        wipRemoveId={std.wipRemoveId}
+                        wipRemoveIncrement={std.wipRemoveIncrement}
+                      />
+                    </div>
+                  ))}
+                {/* <div className="motion__std__stdized__inner__element">
                   <Standardized
                     key={0}
                     id={0}
@@ -261,7 +305,7 @@ const Motion = () => {
                     wipRemoveIncrement={-1}
                     setWipFunction={setWipFunction}
                   />
-                </div>
+                </div> */}
                 {/* <div className="motion__std__stdized__inner__element">
                   <Standardized
                     key={2}
@@ -277,7 +321,26 @@ const Motion = () => {
           <div className="motion__divider" />
           <div className="motion__virtual">
             <div className="motion__virtual__video">
-              <Video
+              {setupData["video"] &&
+                setupData["video"].map((video, idx) => (
+                  <Video
+                    key={idx}
+                    id={video.id}
+                    name={video.name}
+                    src={video.src}
+                    playbackRate={playbackRate}
+                    textStyle={video.textStyle}
+                  >
+                    {video.wip && (
+                      <WIP
+                        id={video.wip.id}
+                        amount={wip}
+                        style={video.wip.style}
+                      />
+                    )}
+                  </Video>
+                ))}
+              {/* <Video
                 id={1}
                 name={"OP1"}
                 src="/videos/OP1-1.mp4"
@@ -290,14 +353,13 @@ const Motion = () => {
                 playbackRate={playbackRate}
               >
                 <WIP id={0} amount={wip} style={{ top: "60%", left: -50 }} />
-              </Video>
+              </Video> */}
               {/* <Video
                 id={2}
                 name={"OP1"}
                 src="/videos/OP1.mp4"
                 playbackRate={playbackRate}
               ></Video> */}
-              {/* TODO add video outline */}
             </div>
           </div>
         </div>

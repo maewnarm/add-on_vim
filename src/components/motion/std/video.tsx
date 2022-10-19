@@ -8,6 +8,7 @@ interface VideoProps {
   name: string;
   src: string;
   playbackRate: number;
+  textStyle?: React.CSSProperties
   children?: JSX.Element;
 }
 

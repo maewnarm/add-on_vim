@@ -4,6 +4,7 @@ import { MotionContext } from "@/pages/motion/index";
 interface TimeCatcherProps {
   id: number;
   intervalTime_ms: number;
+  disableVideo: boolean;
   start: boolean;
   pause?: boolean;
   stop: boolean;
@@ -29,6 +30,7 @@ const TimeCatcher: React.FC<TimeCatcherProps> = (props) => {
   const {
     id,
     intervalTime_ms,
+    disableVideo,
     start,
     pause,
     stop,
@@ -154,7 +156,9 @@ const TimeCatcher: React.FC<TimeCatcherProps> = (props) => {
       )
         return;
 
-      playVideoFunction(id);
+      if (!disableVideo) {
+        playVideoFunction(id);
+      }
       setSubCount(subCount + 1);
     }
   }, [count]);
@@ -220,11 +224,11 @@ const TimeCatcher: React.FC<TimeCatcherProps> = (props) => {
           setSubStep(0);
           setSubStepCount(0);
 
-          if (typeof referencedCounter !== "undefined") {
+          if (typeof referencedCounter !== "undefined" && !disableVideo) {
             pauseVideoFunction(id);
           }
 
-          resetVideoFunction(id);
+          if (!disableVideo) resetVideoFunction(id);
         } else {
           // stopFunction();
           // setTimerStateFunction(id,[false, false, false, true]);

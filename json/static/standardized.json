@@ -114,5 +114,159 @@
         "WT": 0
       }
     ]
+  ],
+  "addon-gcu-mold-terminal": [
+    [
+      {
+        "operation": "Waiting for Terminal cutting M/C",
+        "HT": 5.1,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Move to Terminal cutting M/C",
+        "HT": 2.2,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Place to Terminal cutting M/C",
+        "HT": 2.3,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Return to home position",
+        "HT": 2,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Waiting",
+        "HT": 11.3,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Pick work from conveyor",
+        "HT": 5.6,
+        "MT": 0,
+        "WT": 0
+      }
+    ],
+    [
+      {
+        "operation": "Move to Terminal cutting M/C-1",
+        "HT": 1.6,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Pick work from Terminal Cutting M/C",
+        "HT": 2.2,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Move to Insulation check M/C",
+        "HT": 1.8,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Place to Insulation check M/C",
+        "HT": 3.9,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Waiting",
+        "HT": 18,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Move to Terminal cutting M/C-2",
+        "HT": 1,
+        "MT": 0,
+        "WT": 0
+      }
+    ],
+    [
+      {
+        "operation": "Move to Buffer jig-1",
+        "HT": 1.7,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Move to FG Box",
+        "HT": 5.7,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Waiting-1",
+        "HT": 4.2,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Move to Air blow M/C",
+        "HT": 2.6,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Move to waiting position",
+        "HT": 2.1,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Waiting-2",
+        "HT": 11.5,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Move to Buffer jig-2",
+        "HT": 0.7,
+        "MT": 0,
+        "WT": 0
+      }
+    ],
+    [
+      {
+        "operation": "Waiting-1",
+        "HT": 18,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Pick work from pallet",
+        "HT": 1.7,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Transfer to FG Box",
+        "HT": 5.3,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Return home position",
+        "HT": 2.3,
+        "MT": 0,
+        "WT": 0
+      },
+      {
+        "operation": "Waiting-2",
+        "HT": 1.2,
+        "MT": 0,
+        "WT": 0
+      }
+    ]
   ]
 }
